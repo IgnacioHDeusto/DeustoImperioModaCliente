@@ -4,48 +4,42 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
-
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 public class ventanaAdministrador extends JFrame{
-    protected JButton anyadirProducto;
-    protected JButton borrarProducto;
-    protected JButton editarProducto;
+    protected JButton gestionarProductos;
     protected JButton gestionarCuentas;
 
     public ventanaAdministrador() {
+        setTitle("VENTANA ADMINISTRADOR"); 
         setSize(700,900);
         setLocationRelativeTo(null);
         Container cp = this.getContentPane();
-        JPanel north = new JPanel();
-        JPanel south = new JPanel();
-        cp.add(north, BorderLayout.NORTH);
-        cp.add(south, BorderLayout.SOUTH);
+        cp.setLayout(new GridBagLayout()); 
 
-        anyadirProducto = new JButton("Add Product");
-        borrarProducto = new JButton("Delete Product");
-        editarProducto = new JButton("Edit Product");
-        gestionarCuentas = new JButton("Manage Accounts");
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH; 
+        gbc.weightx = 1.0; 
+        gbc.weighty = 1.0; 
 
-        anyadirProducto.setBackground(new Color(140, 170, 255));
-        anyadirProducto.setBorder(new LineBorder(Color.BLACK));
-        borrarProducto.setBackground(new Color(140, 170, 255));
-        borrarProducto.setBorder(new LineBorder(Color.BLACK));
-        editarProducto.setBackground(new Color(140, 170, 255));
-        editarProducto.setBorder(new LineBorder(Color.BLACK));
+        JPanel panelBotones = new JPanel(new GridLayout(1, 2));
+        cp.add(panelBotones, gbc);
+
+        gestionarProductos = new JButton("GESTIONAR PRODUCTOS");
+        gestionarCuentas = new JButton("GESTIONAR CUENTAS");
+
+        gestionarProductos.setBackground(new Color(140, 170, 255));
+        gestionarProductos.setBorder(new LineBorder(Color.BLACK));
         gestionarCuentas.setBackground(new Color(140, 170, 255));
         gestionarCuentas.setBorder(new LineBorder(Color.BLACK));
 
-        north.setLayout(new GridLayout(1,2));
-        south.setLayout(new GridLayout(1,2));
-        
-        north.add(anyadirProducto);
-        north.add(borrarProducto);
-        south.add(editarProducto);
-        south.add(gestionarCuentas);
+        panelBotones.add(gestionarProductos);
+        panelBotones.add(gestionarCuentas);
 
     }
 }
