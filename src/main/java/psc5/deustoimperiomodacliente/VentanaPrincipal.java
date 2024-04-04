@@ -22,11 +22,8 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import psc5.deustoimperiomodacliente.gui.ventanaAdministrador;
 
 
 public class VentanaPrincipal extends JFrame{
@@ -98,7 +95,7 @@ public class VentanaPrincipal extends JFrame{
 						reg
 					};
 				
-				int result = JOptionPane.showConfirmDialog(null, inputs, 
+                int result = JOptionPane.showConfirmDialog(null, inputs, 
 						"REGISTRO", 
 						JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.PLAIN_MESSAGE);
