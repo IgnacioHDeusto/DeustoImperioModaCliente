@@ -136,6 +136,7 @@ public class VentanaPrincipal extends JFrame{
         var ctx = new SpringApplicationBuilder(VentanaPrincipal.class)
             .headless(false).web(WebApplicationType.NONE).run(args);
 
+            
         EventQueue.invokeLater(() -> {
 
             var ex = ctx.getBean(VentanaPrincipal.class);
