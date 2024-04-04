@@ -1,7 +1,7 @@
 package psc5.deustoimperiomodacliente.gui;
 
 import java.awt.BorderLayout;
-
+import java.awt.Color;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -47,7 +47,6 @@ public class ventanaProductos extends JFrame {
         getContentPane().add(new JScrollPane(tablaProductos), BorderLayout.CENTER);
         getContentPane().add(panelBotones, BorderLayout.SOUTH);
 
-        setVisible(true);
     }
 
 
