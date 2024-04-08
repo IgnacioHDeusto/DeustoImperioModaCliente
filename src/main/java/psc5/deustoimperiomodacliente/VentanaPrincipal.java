@@ -22,12 +22,20 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import psc5.deustoimperiomodacliente.gui.VentanaGestionCuentas;
+import psc5.deustoimperiomodacliente.gui.ventanaAdministrador;
+import psc5.deustoimperiomodacliente.gui.ventanaProductos;
 
 
 public class VentanaPrincipal extends JFrame{
     
+    public static VentanaPrincipal vp;
+    public static ventanaAdministrador va; 
+    public static VentanaGestionCuentas vgc; 
+    public static ventanaProductos vprod;
+
+    public static boolean admin = false;
+
     protected JLabel correo1;
     protected JTextField correo;
     protected JLabel contrasena1;
@@ -59,6 +67,26 @@ public class VentanaPrincipal extends JFrame{
         iniciarsesion.setBackground(new Color(140, 170, 255));
         iniciarsesion.setForeground(Color.WHITE);
         
+        iniciarsesion.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+
+                if (correo.getText().equals("1")) {
+                    vp.setVisible(false);
+                    admin = true;
+                    va = new ventanaAdministrador();
+                    va.setVisible(true);
+                } else {
+                    vp.setVisible(false);
+                    admin = false;
+                    vprod = new ventanaProductos();
+                    vprod.setVisible(true);
+                }
+
+            }
+
+        });
+
         registrar = new JButton("Registrar");
         registrar.setFont(new Font("Arial", Font.BOLD, 14));
         registrar.setBackground(new Color(140, 170, 255));
@@ -133,14 +161,10 @@ public class VentanaPrincipal extends JFrame{
     }
 
     public static void main(String[] args) {
-        var ctx = new SpringApplicationBuilder(VentanaPrincipal.class)
-            .headless(false).web(WebApplicationType.NONE).run(args);
 
-            
         EventQueue.invokeLater(() -> {
-
-            var ex = ctx.getBean(VentanaPrincipal.class);
-            ex.setVisible(true);
+            vp = new VentanaPrincipal();
+            vp.setVisible(true);
     });
 }
 

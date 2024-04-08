@@ -4,6 +4,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+
+import psc5.deustoimperiomodacliente.VentanaPrincipal;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -16,13 +19,8 @@ import java.awt.event.ActionListener;
 public class ventanaAdministrador extends JFrame{
     protected JButton gestionarProductos;
     protected JButton gestionarCuentas;
-    private ventanaProductos ventanaProductos;
-    private VentanaGestionCuentas ventanaCuentas;
-
 
     public ventanaAdministrador() {
-        ventanaProductos = new ventanaProductos();
-        ventanaCuentas = new VentanaGestionCuentas();
 
         setTitle("VENTANA ADMIN");
         setSize(900, 450);
@@ -51,14 +49,18 @@ public class ventanaAdministrador extends JFrame{
         gestionarProductos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ventanaProductos.setVisible(true);
+                VentanaPrincipal.vprod = new ventanaProductos();
+                VentanaPrincipal.va.setVisible(false);
+                VentanaPrincipal.vprod.setVisible(true);
             }
         });
 
         gestionarCuentas.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ventanaCuentas.setVisible(true);
+                VentanaPrincipal.vgc = new VentanaGestionCuentas();
+                VentanaPrincipal.va.setVisible(false);
+                VentanaPrincipal.vgc.setVisible(true);
             }
         });
 
