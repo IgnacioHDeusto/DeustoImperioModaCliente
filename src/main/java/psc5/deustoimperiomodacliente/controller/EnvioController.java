@@ -1,11 +1,11 @@
 package psc5.deustoimperiomodacliente.controller;
 
 /* 
-public class PedidoController {
+public class EnvioController {
     
     private ServiceLocator serviceLocator;
 
-    public PedidoController(ServiceLocator serviceLocator) {
+    public EnvioController(ServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator; 
     }
 
