@@ -72,12 +72,12 @@ public class VentanaPrincipal extends JFrame{
             public void mouseClicked(MouseEvent e){
                 vprod = new ventanaProductos(); 
 
-                if (correo.getText().equals("1")) {
+                if (correo.getText().equals("1") && contrasena.getText().equals("1")) {
                     vp.setVisible(false);
                     admin = true;
                     va = new ventanaAdministrador();
                     va.setVisible(true);
-                } else {
+                } else if (correo.getText().equals("2") && contrasena.getText().equals("2")){
                     vp.setVisible(false);
                     admin = false;
                     vprod.getProductos();

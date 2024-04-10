@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 public class ventanaAdministrador extends JFrame{
     protected JButton gestionarProductos;
     protected JButton gestionarCuentas;
+    public static ventanaProductos vprod;
 
     public ventanaAdministrador() {
 
@@ -31,7 +32,7 @@ public class ventanaAdministrador extends JFrame{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
-         gbc.weighty = 1.0;
+        gbc.weighty = 1.0;
 
         JPanel panelBotones = new JPanel(new GridLayout(1, 2));
         cp.add(panelBotones, gbc);
@@ -52,6 +53,8 @@ public class ventanaAdministrador extends JFrame{
                 VentanaPrincipal.vprod = new ventanaProductos();
                 VentanaPrincipal.va.setVisible(false);
                 VentanaPrincipal.vprod.setVisible(true);
+                vprod.getProductos();
+                vprod.setVisible(true);
             }
         });
 
