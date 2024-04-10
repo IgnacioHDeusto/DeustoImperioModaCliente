@@ -52,9 +52,8 @@ public class ventanaAdministrador extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 VentanaPrincipal.vprod = new ventanaProductos();
                 VentanaPrincipal.va.setVisible(false);
+                VentanaPrincipal.vprod.getProductos();
                 VentanaPrincipal.vprod.setVisible(true);
-                vprod.getProductos();
-                vprod.setVisible(true);
             }
         });
 
