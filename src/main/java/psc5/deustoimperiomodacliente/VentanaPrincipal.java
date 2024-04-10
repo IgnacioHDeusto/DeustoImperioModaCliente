@@ -15,12 +15,18 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import psc5.deustoimperiomodacliente.gui.VentanaGestionCuentas;
 import psc5.deustoimperiomodacliente.gui.ventanaAdministrador;
@@ -42,6 +48,9 @@ public class VentanaPrincipal extends JFrame{
     protected JPasswordField contrasena;
     protected JButton iniciarsesion;
     protected JButton registrar;
+
+    private HttpClient client = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_2).build();
 
 	public VentanaPrincipal() {
         Container cp = this.getContentPane();
@@ -128,7 +137,21 @@ public class VentanaPrincipal extends JFrame{
 						"REGISTRO", 
 						JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.PLAIN_MESSAGE);
-				
+
+                if (result == JOptionPane.OK_OPTION) {
+                    final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/usuario/crear?dni=" + dni.getText() +"&contr=" + contrasena.getText() + "&nombre=" + nombre.getText() + "&correo=" + correo.getText() + "&pedidos=null&tipoU="+treg.getSelectedItem().toString())).build();
+                    System.out.println("http://127.0.0.1:8080/articulo/crear?dni=" + dni.getText() +"&contr=" + contrasena.getText() + "&nombre=" + nombre.getText() + "&correo=" + correo.getText() + "&pedidos=null&tipoU="+treg.getSelectedItem().toString());
+                    try {
+                        final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    } catch (IOException | InterruptedException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                }
+                
+
+
+
 			//	if (result == JOptionPane.OK_OPTION) {
 			//		if (correo.getText() != "" && nombre.getText() != "" && contrasena.getText() != "") {
 			//			if (Integer.parseInt(rep.getValue().toString()) != 0 || Integer.parseInt(max.getValue().toString()) != 0
