@@ -114,7 +114,7 @@ public class VentanaPrincipal extends JFrame{
 				reg.setLayout(new GridLayout(1,3));
 				
 				JComboBox<String> treg = new JComboBox<String>();
-				treg.addItem("Usuario");
+				treg.addItem("Cliente");
 				treg.addItem("Administrador");
 				reg.add(new JLabel());
 				reg.add(treg);
@@ -140,7 +140,6 @@ public class VentanaPrincipal extends JFrame{
 
                 if (result == JOptionPane.OK_OPTION) {
                     final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/usuario/crear?dni=" + dni.getText() +"&contr=" + contrasena.getText() + "&nombre=" + nombre.getText() + "&correo=" + correo.getText() + "&pedidos=null&tipoU="+treg.getSelectedItem().toString())).build();
-                    System.out.println("http://127.0.0.1:8080/articulo/crear?dni=" + dni.getText() +"&contr=" + contrasena.getText() + "&nombre=" + nombre.getText() + "&correo=" + correo.getText() + "&pedidos=null&tipoU="+treg.getSelectedItem().toString());
                     try {
                         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     } catch (IOException | InterruptedException e1) {

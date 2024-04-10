@@ -61,6 +61,7 @@ public class ventanaAdministrador extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 VentanaPrincipal.vgc = new VentanaGestionCuentas();
+                VentanaPrincipal.vgc.getUsuarios();
                 VentanaPrincipal.va.setVisible(false);
                 VentanaPrincipal.vgc.setVisible(true);
             }

@@ -3,6 +3,14 @@ package psc5.deustoimperiomodacliente.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,6 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import psc5.deustoimperiomodacliente.post.Usuario;
+
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.swing.JScrollPane;
 
 public class VentanaGestionCuentas extends JFrame{
@@ -20,6 +34,8 @@ public class VentanaGestionCuentas extends JFrame{
     private JScrollPane scrollPaneCuentas;
     private JButton backButton;
     private JButton deleteButton;
+    private HttpClient client = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_2).build();
     
     public VentanaGestionCuentas() {
         setTitle("Gestion Cuentas");
@@ -68,5 +84,32 @@ public class VentanaGestionCuentas extends JFrame{
         
         add(bottomPanel, BorderLayout.SOUTH);
     }
+    public void getUsuarios() {
+        final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://localhost:8080/usuario/all")).build();
 
+        try {
+            // Realizar petición al servidor
+            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            List<Usuario> usuarios = convertirObjeto(response.body(), new TypeReference<List<Usuario>>() { });
+            usuarios.stream().forEach(usuario -> {
+                modeloDatosCuentas.addRow(new Object[] {usuario.getDni(), usuario.getNombre(), usuario.getCorreo()});
+            });
+            this.tablaCuentas.setModel(modeloDatosCuentas);
+            System.out.println(response.body());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    final ObjectMapper mapper = new ObjectMapper();
+    public <T> T convertirObjeto(final String json, final TypeReference<T> reference) {
+        try {
+           return this.mapper.readValue(json, reference);
+        } catch (IOException e) {
+            e.printStackTrace();
+            {
+                return null;
+            }
+        }
+    }   
     }

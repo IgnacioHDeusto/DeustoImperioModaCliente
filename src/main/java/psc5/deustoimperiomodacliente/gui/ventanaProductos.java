@@ -52,6 +52,133 @@ public class ventanaProductos extends JFrame {
             panelBotones.add(botonEditar);
         }
         
+        botonEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Verificar si se ha seleccionado una fila en la tabla
+                int filaSeleccionada = tablaProductos.getSelectedRow();
+                if (filaSeleccionada == -1) {
+                    // No se ha seleccionado ninguna fila, mostrar un mensaje de advertencia
+                    JOptionPane.showMessageDialog(null, "Por favor, seleccione un artículo para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // Obtener los datos del artículo seleccionado
+                String nombre = (String) tablaProductos.getValueAt(filaSeleccionada, 0);
+                String categoria = (String) tablaProductos.getValueAt(filaSeleccionada, 1);
+                String descripcion = (String) tablaProductos.getValueAt(filaSeleccionada, 2);
+                double precio = (double) tablaProductos.getValueAt(filaSeleccionada, 3);
+                String tamaño = (String) tablaProductos.getValueAt(filaSeleccionada, 4);
+
+                // Crear componentes para editar el artículo
+                JTextField nombreField = new JTextField(nombre);
+                JComboBox<String> categoriaCombo = new JComboBox<>();
+                // Agregar opciones al combo de categoría y seleccionar la categoría actual
+                categoriaCombo.addItem("RopaDeportiva");
+                categoriaCombo.addItem("CalzadoDeportivo");
+                categoriaCombo.addItem("Calzado");
+                categoriaCombo.addItem("Ropa");
+                categoriaCombo.addItem("Accesorios");
+                categoriaCombo.addItem("RopaInterior");
+                categoriaCombo.setSelectedItem(categoria);
+                JTextField descripcionField = new JTextField(descripcion);
+                JSpinner precioSpinner = new JSpinner(new SpinnerNumberModel(precio, 0, 500, 1));
+                JTextField tamañoField = new JTextField(tamaño);
+
+                // Crear el JComponent con los componentes necesarios
+                JComponent[] inputs = new JComponent[] {
+                    new JLabel("Nombre: "),
+                    nombreField,
+                    new JLabel("Categoría: "),
+                    categoriaCombo,
+                    new JLabel("Descripción: "),
+                    descripcionField,
+                    new JLabel("Precio: "),
+                    precioSpinner,
+                    new JLabel("Tamaño: "),
+                    tamañoField
+                };
+
+                // Mostrar el JComponent para editar el artículo
+                int result = JOptionPane.showConfirmDialog(null, inputs, "Editar Artículo", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    // Actualizar los datos del artículo con los nuevos valores
+                    // Aquí deberías implementar la lógica para guardar los cambios en el artículo.
+                    // Puedes acceder a los nuevos valores utilizando los componentes creados anteriormente.
+                }
+            }
+        });
+
+        botonAgregar.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JTextField nombre_art = new JTextField(30);
+				JComboBox<String> categoriaCombo = new JComboBox<String>();
+				categoriaCombo.addItem("RopaDeportiva");
+				categoriaCombo.addItem("CalzadoDeportivo");
+				categoriaCombo.addItem("Calzado");
+				categoriaCombo.addItem("Ropa");
+				categoriaCombo.addItem("Accesorios");
+				categoriaCombo.addItem("RopaInterior");
+				JTextField desc_art = new JTextField(30);
+				JSpinner precio = new JSpinner(new SpinnerNumberModel(0, 0, 500, 1));
+				JTextField tamaño = new JTextField(30);
+				
+				JComponent[] inputs = new JComponent[] {
+						new JLabel("NOMBRE: "),
+						nombre_art,
+						new JLabel("CATEGORIA: "),
+						categoriaCombo,
+						new JLabel("DESCRIPCION: "),
+						desc_art,
+						new JLabel("PRECIO: "),
+						precio,
+						new JLabel("TAMAÑO: "),
+						tamaño,
+						
+					};
+				int result = JOptionPane.showConfirmDialog(null, inputs, 
+						"AGREGAR ARTICULO", 
+						JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.PLAIN_MESSAGE);
+				
+				if (result == JOptionPane.OK_OPTION) {
+					final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/articulo/crear?nombre=" + nombre_art.getText() +"&desc=" + desc_art.getText() + "&categoria=" + categoriaCombo.getSelectedItem().toString() + "&precio=" + precio.getValue() + "&tam="+tamaño.getText())).build();
+                    try {
+                        final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    } catch (IOException | InterruptedException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+				}
+				
+				
+			}
+		});
 
         // Agregar componentes a la ventana
         getContentPane().setLayout(new BorderLayout());
@@ -67,12 +194,12 @@ public class ventanaProductos extends JFrame {
         try {
             final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             List<Articulo> articulos = convertirObjeto(response.body(), new TypeReference<List<Articulo>>() { });
+            DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+            model.setRowCount(0);
             articulos.stream().forEach(articulo -> {
                 ((DefaultTableModel) tablaProductos.getModel()).addRow(new Object[] {articulo.getId(), articulo.getNombre(), articulo.getDescripcion(), articulo.getPrecio(), articulo.getTamano(), articulo.getCategoria()});
             });
-
             this.tablaProductos.setModel((DefaultTableModel) tablaProductos.getModel());
-            System.out.println(response.body());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
