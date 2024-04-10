@@ -14,7 +14,6 @@ import psc5.deustoimperiomodacliente.controller.ArticuloController;
 
 public class ventanaProductos extends JFrame {
     private static final String JLabel = null;
-    private JTable tablaProductos;
     private JButton botonAgregar, botonEliminar, botonEditar;
     private JTable tablaArticulos;
     private DefaultTableModel modeloDatosArticulos;
@@ -48,6 +47,10 @@ public class ventanaProductos extends JFrame {
 
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
+
+        panelBotones.add(botonAgregar);
+            panelBotones.add(botonEliminar);
+            panelBotones.add(botonEditar);
         /*JPanel panelInfo = new JPanel();
 
         panelInfo.setLayout(new GridLayout(1, 2));
@@ -71,6 +74,61 @@ public class ventanaProductos extends JFrame {
 
         });*/
 
+        botonEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Verificar si se ha seleccionado una fila en la tabla
+                int filaSeleccionada = tablaArticulos.getSelectedRow();
+                if (filaSeleccionada == -1) {
+                    // No se ha seleccionado ninguna fila, mostrar un mensaje de advertencia
+                    JOptionPane.showMessageDialog(null, "Por favor, seleccione un artículo para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // Obtener los datos del artículo seleccionado
+                String nombre = (String) tablaArticulos.getValueAt(filaSeleccionada, 0);
+                String categoria = (String) tablaArticulos.getValueAt(filaSeleccionada, 1);
+                String descripcion = (String) tablaArticulos.getValueAt(filaSeleccionada, 2);
+                double precio = (double) tablaArticulos.getValueAt(filaSeleccionada, 3);
+                String tamaño = (String) tablaArticulos.getValueAt(filaSeleccionada, 4);
+
+                // Crear componentes para editar el artículo
+                JTextField nombreField = new JTextField(nombre);
+                JComboBox<String> categoriaCombo = new JComboBox<>();
+                // Agregar opciones al combo de categoría y seleccionar la categoría actual
+                categoriaCombo.addItem("RopaDeportiva");
+                categoriaCombo.addItem("CalzadoDeportivo");
+                categoriaCombo.addItem("Calzado");
+                categoriaCombo.addItem("Ropa");
+                categoriaCombo.addItem("Accesorios");
+                categoriaCombo.addItem("RopaInterior");
+                categoriaCombo.setSelectedItem(categoria);
+                JTextField descripcionField = new JTextField(descripcion);
+                JSpinner precioSpinner = new JSpinner(new SpinnerNumberModel(precio, 0, 500, 1));
+                JTextField tamañoField = new JTextField(tamaño);
+
+                // Crear el JComponent con los componentes necesarios
+                JComponent[] inputs = new JComponent[] {
+                    new JLabel("Nombre: "),
+                    nombreField,
+                    new JLabel("Categoría: "),
+                    categoriaCombo,
+                    new JLabel("Descripción: "),
+                    descripcionField,
+                    new JLabel("Precio: "),
+                    precioSpinner,
+                    new JLabel("Tamaño: "),
+                    tamañoField
+                };
+
+                // Mostrar el JComponent para editar el artículo
+                int result = JOptionPane.showConfirmDialog(null, inputs, "Editar Artículo", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    // Actualizar los datos del artículo con los nuevos valores
+                    // Aquí deberías implementar la lógica para guardar los cambios en el artículo.
+                    // Puedes acceder a los nuevos valores utilizando los componentes creados anteriormente.
+                }
+            }
+        });
 
         botonAgregar.addMouseListener(new MouseListener() {
 			
@@ -148,17 +206,13 @@ public class ventanaProductos extends JFrame {
 			}
 		});
 
-        if (VentanaPrincipal.admin) {
-            panelBotones.add(botonAgregar);
-            panelBotones.add(botonEliminar);
-            panelBotones.add(botonEditar);
-        }
+
         
 
         // Agregar componentes a la ventana
         getContentPane().setLayout(new BorderLayout());
         //getContentPane().add(panelInfo, BorderLayout.NORTH);
-        getContentPane().add(new JScrollPane(tablaProductos), BorderLayout.CENTER);
+        getContentPane().add(new JScrollPane(tablaArticulos), BorderLayout.CENTER);
         getContentPane().add(panelBotones, BorderLayout.SOUTH);
 
     }
