@@ -2,11 +2,27 @@ package psc5.deustoimperiomodacliente.gui;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import org.springframework.http.client.reactive.HttpComponentsClientHttpConnector;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 import psc5.deustoimperiomodacliente.VentanaPrincipal;
+import psc5.deustoimperiomodacliente.post.Articulo;
 
 public class ventanaProductos extends JFrame {
+    private HttpClient client = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_2).build();
     private static final String JLabel = null;
     private JTable tablaProductos;
     private JButton botonAgregar, botonEliminar, botonEditar;
@@ -18,15 +34,9 @@ public class ventanaProductos extends JFrame {
         setLocationRelativeTo(null);
 
         // Crear tabla
-        String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Stock"};
+        String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Tamaño", "Categoría"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
         tablaProductos = new JTable(modeloTabla);
-
-        // Llenar tabla con datos de la lista de productos
-       // for (Producto producto : listaProductos) {
-      //      Object[] fila = {producto.getId(), producto.getNombre(), producto.getDescripcion(), producto.getPrecio(), producto.getStock()};
-        //    modeloTabla.addRow(fila);
-     //   }
 
         // Crear botones
         botonAgregar = new JButton("Agregar");
@@ -35,28 +45,6 @@ public class ventanaProductos extends JFrame {
 
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
-        /*JPanel panelInfo = new JPanel();
-
-        panelInfo.setLayout(new GridLayout(1, 2));
-        panelInfo.add(new JLabel("  Iñaki Prieto Barturen"));
-        JPanel cerrarS = new JPanel();
-        cerrarS.setLayout(new BorderLayout());
-        JButton ShutDown = new JButton();
-        
-        ShutDown.setBackground(new Color(238, 238, 238));
-        ShutDown.setBorder(null);
-        ShutDown.setIcon(new ImageIcon("resources/cerrarSesion1.png"));
-        cerrarS.add(ShutDown, BorderLayout.EAST);
-        panelInfo.add(cerrarS);
-        
-        ShutDown.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e){
-                VentanaPrincipal.vprod.setVisible(fa);
-                VentanaPrincipal.vp.setVisible(true);
-            }
-
-        });*/
 
         if (VentanaPrincipal.admin) {
             panelBotones.add(botonAgregar);
@@ -73,5 +61,32 @@ public class ventanaProductos extends JFrame {
 
     }
 
+    public void getProductos() { 
+        final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/articulo/all")).build();
+        
+        try {
+            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            List<Articulo> articulos = convertirObjeto(response.body(), new TypeReference<List<Articulo>>() { });
+            articulos.stream().forEach(articulo -> {
+                ((DefaultTableModel) tablaProductos.getModel()).addRow(new Object[] {articulo.getId(), articulo.getNombre(), articulo.getDescripcion(), articulo.getPrecio(), articulo.getTamano(), articulo.getCategoria()});
+            });
 
+            this.tablaProductos.setModel((DefaultTableModel) tablaProductos.getModel());
+            System.out.println(response.body());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    final ObjectMapper mapper = new ObjectMapper();
+    public <T> T convertirObjeto(final String json, final TypeReference<T> reference) {
+        try {
+           return this.mapper.readValue(json, reference);
+        } catch (IOException e) {
+            e.printStackTrace();
+            {
+                return null;
+            }
+        }
+    }
 }

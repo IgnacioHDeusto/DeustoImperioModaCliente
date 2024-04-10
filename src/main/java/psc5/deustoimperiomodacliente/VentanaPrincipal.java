@@ -70,6 +70,7 @@ public class VentanaPrincipal extends JFrame{
         iniciarsesion.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e){
+                vprod = new ventanaProductos(); 
 
                 if (correo.getText().equals("1")) {
                     vp.setVisible(false);
@@ -79,7 +80,7 @@ public class VentanaPrincipal extends JFrame{
                 } else {
                     vp.setVisible(false);
                     admin = false;
-                    vprod = new ventanaProductos();
+                    vprod.getProductos();
                     vprod.setVisible(true);
                 }
 
