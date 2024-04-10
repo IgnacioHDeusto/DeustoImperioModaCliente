@@ -1,7 +1,7 @@
 package psc5.deustoimperiomodacliente.remote;
-/*
+
 public class ServiceLocator {
-    
+ /*   
  	Remote Facade reference
 private IRemoteFacade service;
 
@@ -24,8 +24,8 @@ public void setService(String ip, String port, String serviceName) {
 public IRemoteFacade getService() {
     return this.service;
 }
-
+*/
 
 }
 
-*/
+

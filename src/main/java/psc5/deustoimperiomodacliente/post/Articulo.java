@@ -2,8 +2,7 @@ package psc5.deustoimperiomodacliente.post;
 
 import java.io.Serializable;
 
-public class Articulo implements Serializable{
-    /*{
+ /*{
         "nombre": "as",
         "descripcion": "ads",
         "precio": 12.0,
@@ -11,6 +10,9 @@ public class Articulo implements Serializable{
         "categoria": "Ropa",
         "id": 1
     } */
+
+public class Articulo implements Serializable{
+   
 
     protected String nombre;
     protected String descripcion;

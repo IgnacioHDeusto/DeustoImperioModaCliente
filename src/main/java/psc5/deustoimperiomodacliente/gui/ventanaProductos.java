@@ -88,5 +88,5 @@ public class ventanaProductos extends JFrame {
                 return null;
             }
         }
-    }
+}
 }
