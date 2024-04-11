@@ -25,7 +25,7 @@ public class ventanaProductos extends JFrame {
     .version(HttpClient.Version.HTTP_2).build();
     private static final String JLabel = null;
     private JTable tablaProductos;
-    private JButton botonAgregar, botonEliminar, botonEditar;
+    private JButton botonAgregar, botonEliminar, botonEditar, backButton;
 
     public ventanaProductos() {
         setTitle("Lista de Productos");
@@ -42,10 +42,13 @@ public class ventanaProductos extends JFrame {
         botonAgregar = new JButton("Agregar");
         botonEliminar = new JButton("Eliminar");
         botonEditar = new JButton("Editar");
+        backButton = new JButton("Atrás");
 
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
 
+        
+        panelBotones.add(backButton);
         if (VentanaPrincipal.admin) {
             panelBotones.add(botonAgregar);
             panelBotones.add(botonEliminar);
@@ -63,8 +66,9 @@ public class ventanaProductos extends JFrame {
                 }
 
                 // Obtener los datos del artículo seleccionado
-                String nombre = (String) tablaProductos.getValueAt(filaSeleccionada, 0);
-                String categoria = (String) tablaProductos.getValueAt(filaSeleccionada, 1);
+                Integer id = (Integer) tablaProductos.getValueAt(filaSeleccionada, 0);
+                String nombre = (String) tablaProductos.getValueAt(filaSeleccionada, 1);
+                String categoria = (String) tablaProductos.getValueAt(filaSeleccionada, 5);
                 String descripcion = (String) tablaProductos.getValueAt(filaSeleccionada, 2);
                 double precio = (double) tablaProductos.getValueAt(filaSeleccionada, 3);
                 String tamaño = (String) tablaProductos.getValueAt(filaSeleccionada, 4);
@@ -101,12 +105,81 @@ public class ventanaProductos extends JFrame {
                 // Mostrar el JComponent para editar el artículo
                 int result = JOptionPane.showConfirmDialog(null, inputs, "Editar Artículo", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.OK_OPTION) {
-                    // Actualizar los datos del artículo con los nuevos valores
-                    // Aquí deberías implementar la lógica para guardar los cambios en el artículo.
-                    // Puedes acceder a los nuevos valores utilizando los componentes creados anteriormente.
+                    final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/articulo/update?id=" + id + "&nombre=" + nombreField.getText() +"&desc=" + descripcionField.getText() + "&categoria=" + categoriaCombo.getSelectedItem().toString() + "&precio=" + precioSpinner.getValue() + "&tam="+tamañoField.getText())).build();
+                    try {
+                        final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    } catch (IOException | InterruptedException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
+        
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                VentanaPrincipal.vprod.setVisible(false);
+                if (VentanaPrincipal.admin) {
+                    VentanaPrincipal.va.setVisible(true);
+                } else{
+                    VentanaPrincipal.vp.setVisible(true);
+                }
+                
+            }
+        });
+
+        botonEliminar.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+                int filaSeleccionada = tablaProductos.getSelectedRow();
+                if (filaSeleccionada == -1) {
+                    // No se ha seleccionado ninguna fila, mostrar un mensaje de advertencia
+                    JOptionPane.showMessageDialog(null, "Por favor, seleccione un artículo para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                Integer id = (Integer) tablaProductos.getValueAt(filaSeleccionada, 0);
+
+				if (filaSeleccionada != -1) {
+					final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/articulo/borrar?id=" + id)).build();
+                    try {
+                        final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                        getProductos();
+                    } catch (IOException | InterruptedException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+				}
+				
+				
+			}
+		});
 
         botonAgregar.addMouseListener(new MouseListener() {
 
@@ -170,6 +243,7 @@ public class ventanaProductos extends JFrame {
 					final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/articulo/crear?nombre=" + nombre_art.getText() +"&desc=" + desc_art.getText() + "&categoria=" + categoriaCombo.getSelectedItem().toString() + "&precio=" + precio.getValue() + "&tam="+tamaño.getText())).build();
                     try {
                         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                        getProductos();
                     } catch (IOException | InterruptedException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();

@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import javax.swing.*;
 
 import psc5.deustoimperiomodacliente.VentanaPrincipal;
 
@@ -12,6 +13,7 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,6 +21,7 @@ import java.awt.event.ActionListener;
 public class ventanaAdministrador extends JFrame{
     protected JButton gestionarProductos;
     protected JButton gestionarCuentas;
+    protected JButton backButton;
     public static ventanaProductos vprod;
 
     public ventanaAdministrador() {
@@ -39,6 +42,7 @@ public class ventanaAdministrador extends JFrame{
 
         gestionarProductos = new JButton("GESTIONAR PRODUCTOS");
         gestionarCuentas = new JButton("GESTIONAR CUENTAS");
+        backButton = new JButton("Atrás");
 
         Color buttonColor = new Color(140, 170, 255);
         gestionarProductos.setBackground(buttonColor);
@@ -67,8 +71,20 @@ public class ventanaAdministrador extends JFrame{
             }
         });
 
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                VentanaPrincipal.va.setVisible(false);
+                VentanaPrincipal.vp.setVisible(true);
+            }
+        });
+
+        getContentPane().setLayout(new BorderLayout());
+
         panelBotones.add(gestionarProductos);
         panelBotones.add(gestionarCuentas);
+
+        add(panelBotones, BorderLayout.CENTER);
+        add(backButton, BorderLayout.SOUTH);
 
         setVisible(true);
     }
