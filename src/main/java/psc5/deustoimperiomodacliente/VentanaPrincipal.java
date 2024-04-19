@@ -146,22 +146,7 @@ public class VentanaPrincipal extends JFrame{
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
-                }
-                
-
-
-
-			//	if (result == JOptionPane.OK_OPTION) {
-			//		if (correo.getText() != "" && nombre.getText() != "" && contrasena.getText() != "") {
-			//			if (Integer.parseInt(rep.getValue().toString()) != 0 || Integer.parseInt(max.getValue().toString()) != 0
-			//					|| Integer.parseInt(altura.getValue().toString()) != 0 || Integer.parseInt(peso.getValue().toString()) != 0) {
-			//				controller.registro(nombre.getText(), correo.getText(), fecha.getDate(), treg.getSelectedItem().toString(), Integer.parseInt(altura.toString()), Integer.parseInt(peso.toString()), Integer.parseInt(max.toString()), Integer.parseInt(rep.toString()),  contrasena.getText());
-			//			} else {
-			//				controller.registro(nombre.getText(), correo.getText(), fecha.getDate(),  treg.getSelectedItem().toString(), 0, 0, 0, 0,  contrasena.getText());
-			//			}
-			//		}
-			//	}
-					
+                }	
 				
 			}
 		});

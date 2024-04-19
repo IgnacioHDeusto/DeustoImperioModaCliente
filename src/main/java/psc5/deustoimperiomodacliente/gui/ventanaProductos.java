@@ -35,7 +35,12 @@ public class ventanaProductos extends JFrame {
 
         // Crear tabla
         String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Tamaño", "Categoría"};
-        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
+        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tablaProductos = new JTable(modeloTabla);
 
         // Crear botones
