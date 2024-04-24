@@ -25,7 +25,10 @@ public class ventanaProductos extends JFrame {
     .version(HttpClient.Version.HTTP_2).build();
     private static final String JLabel = null;
     private JTable tablaProductos;
-    private JButton botonAgregar, botonEliminar, botonEditar, backButton;
+    private List<Articulo> todosLosArticulos = new ArrayList<>();
+    private JButton botonAgregar, botonEliminar, botonEditar, backButton, botonCarrito;
+    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior;
+
 
     public ventanaProductos() {
         setTitle("Lista de Productos");
@@ -48,16 +51,120 @@ public class ventanaProductos extends JFrame {
         botonEliminar = new JButton("Eliminar");
         botonEditar = new JButton("Editar");
         backButton = new JButton("Atrás");
+        botonCarrito = new JButton("Añadir al carrito");
+
+        labelCalzado = new JLabel("Calzado");
+        labelRopaDeportiva = new JLabel("Ropa Deportiva");
+        labelCalzadoDeportivo = new JLabel("Calzado Deportivo");
+        labelRopa = new JLabel("Ropa");
+        labelAccesorios = new JLabel("Accesorios");
+        labelRopaInterior = new JLabel("Ropa Interior");
 
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
+        JPanel panelCategoria = new JPanel();
+
+        panelBotones.add(backButton);
+        panelCategoria.add(labelCalzado);
+        panelCategoria.add(labelRopaDeportiva);
+        panelCategoria.add(labelCalzadoDeportivo);
+        panelCategoria.add(labelRopa);
+        panelCategoria.add(labelAccesorios);
+        panelCategoria.add(labelRopaInterior);
+
+        Font font = new Font("Arial", Font.BOLD, 14); // Definir una fuente
+        Color foregroundColor = Color.WHITE; // Color del texto
+        Color backgroundColor = new Color(66, 134, 244); // Color de fondo
+
+        // Establecer estilos para cada JLabel
+        labelCalzado.setFont(font);
+        labelCalzado.setForeground(foregroundColor);
+        labelCalzado.setBackground(backgroundColor);
+        labelCalzado.setOpaque(true); // Permitir que el JLabel tenga un color de fondo visible
+
+        // Repite el proceso para los demás JLabels con sus estilos respectivos
+        labelRopaDeportiva.setFont(font);
+        labelRopaDeportiva.setForeground(foregroundColor);
+        labelRopaDeportiva.setBackground(backgroundColor);
+        labelRopaDeportiva.setOpaque(true);
+
+        // Establecer estilos para cada JLabel
+        labelCalzadoDeportivo.setFont(font);
+        labelCalzadoDeportivo.setForeground(foregroundColor);
+        labelCalzadoDeportivo.setBackground(backgroundColor);
+        labelCalzadoDeportivo.setOpaque(true); // Permitir que el JLabel tenga un color de fondo visible
+
+        // Repite el proceso para los demás JLabels con sus estilos respectivos
+        labelRopa.setFont(font);
+        labelRopa.setForeground(foregroundColor);
+        labelRopa.setBackground(backgroundColor);
+        labelRopa.setOpaque(true);
+
+        labelAccesorios.setFont(font);
+        labelAccesorios.setForeground(foregroundColor);
+        labelAccesorios.setBackground(backgroundColor);
+        labelAccesorios.setOpaque(true);
+
+        labelRopaInterior.setFont(font);
+        labelRopaInterior.setForeground(foregroundColor);
+        labelRopaInterior.setBackground(backgroundColor);
+        labelRopaInterior.setOpaque(true);
+
+        labelCalzado.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                filtrarProductosPorCategoria("Calzado");
+            }
+        });
+        
+        labelRopaDeportiva.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                filtrarProductosPorCategoria("RopaDeportiva");
+            }
+        });
+
+        labelCalzadoDeportivo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                filtrarProductosPorCategoria("CalzadoDeportivo");
+            }
+        });
+
+        labelRopa.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                filtrarProductosPorCategoria("Ropa");
+            }
+        });
+
+        labelAccesorios.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                filtrarProductosPorCategoria("Accesorios");
+            }
+        });
+
+        labelRopaInterior.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                filtrarProductosPorCategoria("RopaInterior");
+            }
+        });
 
         
-        panelBotones.add(backButton);
+
+
+
+
         if (VentanaPrincipal.admin) {
             panelBotones.add(botonAgregar);
             panelBotones.add(botonEliminar);
             panelBotones.add(botonEditar);
+        }
+
+        if (!VentanaPrincipal.admin){
+            panelBotones.add(botonCarrito);
         }
         
         botonEditar.addActionListener(new ActionListener() {
@@ -264,7 +371,27 @@ public class ventanaProductos extends JFrame {
         //getContentPane().add(panelInfo, BorderLayout.NORTH);
         getContentPane().add(new JScrollPane(tablaProductos), BorderLayout.CENTER);
         getContentPane().add(panelBotones, BorderLayout.SOUTH);
+        getContentPane().add(panelCategoria, BorderLayout.NORTH);
 
+    }
+
+    private void filtrarProductosPorCategoria(String categoria) {
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaProductos.getModel();
+        modeloTabla.setRowCount(0); // Limpiar la tabla antes de agregar productos filtrados
+    
+        if (categoria.equals("Todos")) {
+            // Restaurar la tabla completa usando la copia de respaldo de todos los productos
+            todosLosArticulos.forEach(articulo -> {
+                modeloTabla.addRow(new Object[] {articulo.getId(), articulo.getNombre(), articulo.getDescripcion(), articulo.getPrecio(), articulo.getTamano(), articulo.getCategoria()});
+            });
+        } else {
+            // Filtrar productos por categoría seleccionada
+            todosLosArticulos.stream()
+                    .filter(articulo -> articulo.getCategoria().equals(categoria))
+                    .forEach(articulo -> {
+                        modeloTabla.addRow(new Object[]{articulo.getId(), articulo.getNombre(), articulo.getDescripcion(), articulo.getPrecio(), articulo.getTamano(), articulo.getCategoria()});
+                    });
+        }
     }
 
     public void getProductos() { 
@@ -273,6 +400,7 @@ public class ventanaProductos extends JFrame {
         try {
             final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             List<Articulo> articulos = convertirObjeto(response.body(), new TypeReference<List<Articulo>>() { });
+            todosLosArticulos = new ArrayList<>(articulos);
             DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
             model.setRowCount(0);
             articulos.stream().forEach(articulo -> {
