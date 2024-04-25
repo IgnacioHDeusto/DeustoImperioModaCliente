@@ -26,8 +26,10 @@ public class ventanaProductos extends JFrame {
     private static final String JLabel = null;
     private JTable tablaProductos;
     private List<Articulo> todosLosArticulos = new ArrayList<>();
-    private JButton botonAgregar, botonEliminar, botonEditar, backButton, botonCarrito;
+    private JButton botonAgregar, botonEliminar, botonEditar, backButton, añadirCarrito;
     private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior;
+    private JButton carrito;
+    private List<Articulo> productosCarrito = new ArrayList<>();
 
 
     public ventanaProductos() {
@@ -47,11 +49,17 @@ public class ventanaProductos extends JFrame {
         tablaProductos = new JTable(modeloTabla);
 
         // Crear botones
+        carrito = new JButton("");
+		ImageIcon carritoIcon = new ImageIcon("resources/carrito2.jpg");
+//		strava.setIcon(new ImageIcon("resources/strava.png"));
+		Image carritoImage = carritoIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+		carrito.setIcon(new ImageIcon(carritoImage));
+
         botonAgregar = new JButton("Agregar");
         botonEliminar = new JButton("Eliminar");
         botonEditar = new JButton("Editar");
         backButton = new JButton("Atrás");
-        botonCarrito = new JButton("Añadir al carrito");
+        añadirCarrito = new JButton("Añadir al carrito");
 
         labelCalzado = new JLabel("Calzado");
         labelRopaDeportiva = new JLabel("Ropa Deportiva");
@@ -71,8 +79,9 @@ public class ventanaProductos extends JFrame {
         panelCategoria.add(labelRopa);
         panelCategoria.add(labelAccesorios);
         panelCategoria.add(labelRopaInterior);
+        panelCategoria.add(carrito, BorderLayout.EAST);
 
-        Font font = new Font("Arial", Font.BOLD, 14); // Definir una fuente
+        Font font = new Font("Arial", Font.BOLD, 12); // Definir una fuente
         Color foregroundColor = Color.WHITE; // Color del texto
         Color backgroundColor = new Color(66, 134, 244); // Color de fondo
 
@@ -152,7 +161,29 @@ public class ventanaProductos extends JFrame {
             }
         });
 
-        
+        //FUNCIONALIDAD DEL BOTON CARRITO
+        carrito.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Cuando se hace clic en el botón "Carrito"
+                ventanaCarrito vcarrito = new ventanaCarrito(productosCarrito);
+                vcarrito.setVisible(true);
+            }
+        });
+
+        tablaProductos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Cuando se hace clic en la tabla de productos
+                int filaSeleccionada = tablaProductos.getSelectedRow();
+                if (filaSeleccionada != -1) {
+                    // Obtener el producto seleccionado
+                    Articulo producto = todosLosArticulos.get(filaSeleccionada);
+                    // Agregar el producto al carrito
+                    productosCarrito.add(producto);
+                }
+            }
+        });
+    
 
 
 
@@ -164,7 +195,7 @@ public class ventanaProductos extends JFrame {
         }
 
         if (!VentanaPrincipal.admin){
-            panelBotones.add(botonCarrito);
+            panelBotones.add(añadirCarrito);
         }
         
         botonEditar.addActionListener(new ActionListener() {
