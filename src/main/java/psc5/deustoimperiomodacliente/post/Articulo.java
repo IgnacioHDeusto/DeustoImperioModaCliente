@@ -12,8 +12,6 @@ import java.io.Serializable;
     } */
 
 public class Articulo implements Serializable{
-   
-
     protected String nombre;
     protected String descripcion;
     protected double precio;
