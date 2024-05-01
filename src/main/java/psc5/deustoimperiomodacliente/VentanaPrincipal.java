@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -59,7 +61,7 @@ public class VentanaPrincipal extends JFrame{
 
         center.setBackground(new Color(200, 200, 200));
     
-        correo1 = new JLabel("Correo:");
+        correo1 = new JLabel("DNI:");
         correo1.setHorizontalAlignment(SwingConstants.CENTER);
         correo1.setFont(new Font("Arial", Font.BOLD, 14));
         correo = new JTextField(20);
@@ -81,18 +83,27 @@ public class VentanaPrincipal extends JFrame{
             public void mouseClicked(MouseEvent e){
                 vprod = new ventanaProductos(); 
 
-                if (correo.getText().equals("1") && contrasena.getText().equals("1")) {
-                    vp.setVisible(false);
-                    admin = true;
-                    va = new ventanaAdministrador();
-                    va.setVisible(true);
-                } else if (correo.getText().equals("2") && contrasena.getText().equals("2")){
-                    vp.setVisible(false);
-                    admin = false;
-                    vprod.getProductos();
-                    vprod.setVisible(true);
-                }
+                final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/usuario/iniciarSesion?dni=" + correo.getText() +"&contr=" + contrasena.getText())).build();
+                try {
+                    final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    String inicio = response.body();
+                    if (inicio.equals("Administrador")){
+                        vp.setVisible(false);
+                        admin = true;
+                        va = new ventanaAdministrador();
+                        va.setVisible(true);
+                    } else if (inicio.equals("Cliente") ){
+                        vp.setVisible(false);
+                        admin = false;
+                        vprod.getProductos();
+                        vprod.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Datos de acceso incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
 
+                } catch (IOException | InterruptedException e1) {
+                    e1.printStackTrace();
+                }
             }
 
         });
