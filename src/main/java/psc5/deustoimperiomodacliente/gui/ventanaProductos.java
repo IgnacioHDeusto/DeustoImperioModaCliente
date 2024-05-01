@@ -36,7 +36,7 @@ public class VentanaProductos extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(750, 600);
         setLocationRelativeTo(null);
-
+    
         // Crear tabla
         String[] columnas = {"ID", "Nombre", "Descripción", "Precio", "Tamaño", "Categoría"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
@@ -45,11 +45,15 @@ public class VentanaProductos extends JFrame {
                 return false;
             }
         };
+    
         tablaProductos = new JTable(modeloTabla);
-
+    
+        // Cambiar la fuente de la tabla
+        tablaProductos.setFont(new Font("Arial", Font.PLAIN, 14));
+    
         // Crear botones
         carrito = new JButton("");
-		ImageIcon carritoIcon = new ImageIcon("resources/carrito2.jpg");
+        ImageIcon carritoIcon = new ImageIcon("resources/carrito2.jpg");
 //		strava.setIcon(new ImageIcon("resources/strava.png"));
 		Image carritoImage = carritoIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
 		carrito.setIcon(new ImageIcon(carritoImage));

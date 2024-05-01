@@ -1,12 +1,12 @@
 Articulo 1
-Nombre: Nike
+Nombre: asada
 Cantidad: 1
-Precio: 120.0
+Precio: 100.0
 -------------------------
 Articulo 2
-Nombre: Rolex
+Nombre: Adidas
 Cantidad: 1
-Precio: 230.0
+Precio: 30.0
 -------------------------
-Total: 350.0
-Fecha y hora: 2024-05-01 20:32:56
+Total: 130.0
+Fecha y hora: 2024-05-01 23:31:24

@@ -2,17 +2,25 @@ package psc5.deustoimperiomodacliente.gui;
 
 import psc5.deustoimperiomodacliente.post.Articulo;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -61,49 +69,74 @@ public class VentanaCarrito extends JFrame{
             modeloTabla.addRow(fila);
         }
 
-        // Añadir un ActionListener al botón "Eliminar"
-        eliminarButton.addActionListener(new ActionListener() {
+    eliminarButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-        // Obtener la fila seleccionada
-        int selectedRow = tablaCarrito.getSelectedRow();
+            // Obtener la fila seleccionada
+            int selectedRow = tablaCarrito.getSelectedRow();
 
-        // Si hay una fila seleccionada, eliminarla
-        if (selectedRow != -1) {
-            modeloTabla.removeRow(selectedRow);
+            // Si hay una fila seleccionada, eliminarla
+            if (selectedRow != -1) {
+                modeloTabla.removeRow(selectedRow);
+            }   
         }
-    }
-        });
+    });
 
     pagarButton.addActionListener(new ActionListener() {
-        @Override
+    @Override
         public void actionPerformed(ActionEvent e) {
-            // Crear un nuevo JDialog
             JDialog dialog = new JDialog();
             dialog.setModal(true);
             dialog.setSize(300, 225);
             dialog.setLocationRelativeTo(null);
-            
+
             // Crear un nuevo JButton
             JButton confirmarButton = new JButton("Confirmar e imprimir ticket");
-            confirmarButton.setSize(100, 50);
+            confirmarButton.setPreferredSize(new Dimension(200, 50));
 
-            // Añadir un ActionListener a confirmarButton
-        confirmarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Implementar la lógica para imprimir el ticket
-                imprimirTicket();
-                dialog.setVisible(false);
-            }
-        });
+            // Crear los JRadioButton
+            JRadioButton opcion1 = new JRadioButton("Envio a domicilio");
+            opcion1.setFont(new Font("Arial", Font.BOLD, 15));
+            JRadioButton opcion2 = new JRadioButton("Recoger en tienda");
+            opcion2.setFont(new Font("Arial", Font.BOLD, 15));
 
-            // Añadir el JButton al JDialog
-            dialog.add(confirmarButton);
+            // Crear el ButtonGroup y agregar los JRadioButton
+            ButtonGroup grupoOpciones = new ButtonGroup();
+            grupoOpciones.add(opcion1);
+            grupoOpciones.add(opcion2);
+
+            // Crear el JLabel
+            JLabel textoOpcionesEnvio = new JLabel("Opciones de envío", SwingConstants.CENTER);
+            textoOpcionesEnvio.setFont(new Font("Arial", Font.BOLD, 20));
+            textoOpcionesEnvio.setPreferredSize(new Dimension(200, 50));
+
+            // Crear un panel para los JRadioButton con BoxLayout
+            JPanel panelOpciones = new JPanel();
+            panelOpciones.setLayout(new BoxLayout(panelOpciones, BoxLayout.Y_AXIS));
+            panelOpciones.add(opcion1);
+            panelOpciones.add(opcion2);
+
+            // Crear un panel principal con BorderLayout
+            JPanel panelPrincipal = new JPanel(new BorderLayout());
+            panelPrincipal.add(textoOpcionesEnvio, BorderLayout.NORTH);
+            panelPrincipal.add(panelOpciones, BorderLayout.CENTER);
+            panelPrincipal.add(confirmarButton, BorderLayout.SOUTH);
+
+            // Añadir el panel principal al JDialog
+            dialog.add(panelPrincipal);
+
+            confirmarButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Implementar la lógica para imprimir el ticket
+                    imprimirTicket();
+                    dialog.setVisible(false);
+                }
+            });
 
             // Mostrar el JDialog
             dialog.setVisible(true);
-    }
+        }
     });
 
         // Agregar la tabla a la ventana
