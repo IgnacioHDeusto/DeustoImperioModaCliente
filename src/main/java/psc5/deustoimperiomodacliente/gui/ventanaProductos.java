@@ -1,6 +1,7 @@
 package psc5.deustoimperiomodacliente.gui;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import org.springframework.http.client.reactive.HttpComponentsClientHttpConnector;
@@ -27,7 +28,7 @@ public class ventanaProductos extends JFrame {
     private JTable tablaProductos;
     private List<Articulo> todosLosArticulos = new ArrayList<>();
     private JButton botonAgregar, botonEliminar, botonEditar, backButton, añadirCarrito;
-    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior;
+    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior, verTodo;
     private JButton carrito;
     private List<Articulo> productosCarrito = new ArrayList<>();
 
@@ -67,6 +68,7 @@ public class ventanaProductos extends JFrame {
         labelRopa = new JLabel("Ropa");
         labelAccesorios = new JLabel("Accesorios");
         labelRopaInterior = new JLabel("Ropa Interior");
+        verTodo = new JLabel("Ver Todo");
 
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
@@ -79,6 +81,7 @@ public class ventanaProductos extends JFrame {
         panelCategoria.add(labelRopa);
         panelCategoria.add(labelAccesorios);
         panelCategoria.add(labelRopaInterior);
+        panelCategoria.add(verTodo);
         panelCategoria.add(carrito, BorderLayout.EAST);
 
         Font font = new Font("Arial", Font.BOLD, 12); // Definir una fuente
@@ -86,37 +89,60 @@ public class ventanaProductos extends JFrame {
         Color backgroundColor = new Color(66, 134, 244); // Color de fondo
 
         // Establecer estilos para cada JLabel
-        labelCalzado.setFont(font);
-        labelCalzado.setForeground(foregroundColor);
-        labelCalzado.setBackground(backgroundColor);
-        labelCalzado.setOpaque(true); // Permitir que el JLabel tenga un color de fondo visible
+        Font newFont = new Font("Arial", Font.BOLD, 12); // Nueva fuente más pequeña
+        Color newForegroundColor = Color.WHITE; // Nuevo color de primer plano
+        Color newBackgroundColor = Color.DARK_GRAY; // Nuevo color de fondo
+        Border border = BorderFactory.createLineBorder(Color.BLACK, 2); // Nuevo borde
 
-        // Repite el proceso para los demás JLabels con sus estilos respectivos
-        labelRopaDeportiva.setFont(font);
-        labelRopaDeportiva.setForeground(foregroundColor);
-        labelRopaDeportiva.setBackground(backgroundColor);
+// Aplica los nuevos estilos a cada JLabel
+        verTodo.setFont(newFont);
+        verTodo.setForeground(newForegroundColor);
+        verTodo.setBackground(newBackgroundColor);
+        verTodo.setBorder(border);
+        verTodo.setHorizontalAlignment(SwingConstants.CENTER);
+        verTodo.setOpaque(true);
+
+
+        labelCalzado.setFont(newFont);
+        labelCalzado.setForeground(newForegroundColor);
+        labelCalzado.setBackground(newBackgroundColor);
+        labelCalzado.setBorder(border);
+        labelCalzado.setHorizontalAlignment(SwingConstants.CENTER);
+        labelCalzado.setOpaque(true);
+
+        labelRopaDeportiva.setFont(newFont);
+        labelRopaDeportiva.setForeground(newForegroundColor);
+        labelRopaDeportiva.setBackground(newBackgroundColor);
+        labelRopaDeportiva.setBorder(border);
+        labelRopaDeportiva.setHorizontalAlignment(SwingConstants.CENTER);
         labelRopaDeportiva.setOpaque(true);
 
-        // Establecer estilos para cada JLabel
-        labelCalzadoDeportivo.setFont(font);
-        labelCalzadoDeportivo.setForeground(foregroundColor);
-        labelCalzadoDeportivo.setBackground(backgroundColor);
-        labelCalzadoDeportivo.setOpaque(true); // Permitir que el JLabel tenga un color de fondo visible
+        labelCalzadoDeportivo.setFont(newFont);
+        labelCalzadoDeportivo.setForeground(newForegroundColor);
+        labelCalzadoDeportivo.setBackground(newBackgroundColor);
+        labelCalzadoDeportivo.setBorder(border);
+        labelCalzadoDeportivo.setHorizontalAlignment(SwingConstants.CENTER);
+        labelCalzadoDeportivo.setOpaque(true);
 
-        // Repite el proceso para los demás JLabels con sus estilos respectivos
-        labelRopa.setFont(font);
-        labelRopa.setForeground(foregroundColor);
-        labelRopa.setBackground(backgroundColor);
+        labelRopa.setFont(newFont);
+        labelRopa.setForeground(newForegroundColor);
+        labelRopa.setBackground(newBackgroundColor);
+        labelRopa.setBorder(border);
+        labelRopa.setHorizontalAlignment(SwingConstants.CENTER);
         labelRopa.setOpaque(true);
 
-        labelAccesorios.setFont(font);
-        labelAccesorios.setForeground(foregroundColor);
-        labelAccesorios.setBackground(backgroundColor);
+        labelAccesorios.setFont(newFont);
+        labelAccesorios.setForeground(newForegroundColor);
+        labelAccesorios.setBackground(newBackgroundColor);
+        labelAccesorios.setBorder(border);
+        labelAccesorios.setHorizontalAlignment(SwingConstants.CENTER);
         labelAccesorios.setOpaque(true);
 
-        labelRopaInterior.setFont(font);
-        labelRopaInterior.setForeground(foregroundColor);
-        labelRopaInterior.setBackground(backgroundColor);
+        labelRopaInterior.setFont(newFont);
+        labelRopaInterior.setForeground(newForegroundColor);
+        labelRopaInterior.setBackground(newBackgroundColor);
+        labelRopaInterior.setBorder(border);
+        labelRopaInterior.setHorizontalAlignment(SwingConstants.CENTER);
         labelRopaInterior.setOpaque(true);
 
         labelCalzado.addMouseListener(new MouseAdapter() {
@@ -158,6 +184,14 @@ public class ventanaProductos extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 filtrarProductosPorCategoria("RopaInterior");
+            }
+        });
+
+        verTodo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Llama al método getProductos para cargar todos los productos en la tabla
+                getProductos();
             }
         });
 
