@@ -4,8 +4,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
-import org.springframework.http.client.reactive.HttpComponentsClientHttpConnector;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,7 +19,7 @@ import java.util.List;
 import psc5.deustoimperiomodacliente.VentanaPrincipal;
 import psc5.deustoimperiomodacliente.post.Articulo;
 
-public class ventanaProductos extends JFrame {
+public class VentanaProductos extends JFrame {
     private HttpClient client = HttpClient.newBuilder()
     .version(HttpClient.Version.HTTP_2).build();
     private static final String JLabel = null;
@@ -33,10 +31,10 @@ public class ventanaProductos extends JFrame {
     private List<Articulo> productosCarrito = new ArrayList<>();
 
 
-    public ventanaProductos() {
+    public VentanaProductos() {
         setTitle("Lista de Productos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(750, 600);
         setLocationRelativeTo(null);
 
         // Crear tabla
@@ -199,7 +197,7 @@ public class ventanaProductos extends JFrame {
         carrito.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Cuando se hace clic en el botón "Carrito"
-                ventanaCarrito vcarrito = new ventanaCarrito(productosCarrito);
+                VentanaCarrito vcarrito = new VentanaCarrito(productosCarrito);
                 vcarrito.setVisible(true);
             }
         });

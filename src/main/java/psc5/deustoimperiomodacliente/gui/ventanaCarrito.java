@@ -11,7 +11,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class ventanaCarrito extends JFrame{
+public class VentanaCarrito extends JFrame{
     
     private List<Articulo> productosCarrito;
     private JTable tablaCarrito;
@@ -29,7 +30,7 @@ public class ventanaCarrito extends JFrame{
     JPanel buttonPanel = new JPanel();
     DefaultTableModel modeloTabla;
 
-    public ventanaCarrito(List<Articulo> productosCarrito) {
+    public VentanaCarrito(List<Articulo> productosCarrito) {
         this.productosCarrito = productosCarrito;
 
         setTitle("Carrito de Compras");

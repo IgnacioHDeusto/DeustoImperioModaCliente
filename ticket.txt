@@ -4,9 +4,9 @@ Cantidad: 1
 Precio: 120.0
 -------------------------
 Articulo 2
-Nombre: Air Force
+Nombre: Rolex
 Cantidad: 1
-Precio: 200.0
+Precio: 230.0
 -------------------------
-Total: 320.0
-Fecha y hora: 2024-05-01 14:48:12
+Total: 350.0
+Fecha y hora: 2024-05-01 20:32:56

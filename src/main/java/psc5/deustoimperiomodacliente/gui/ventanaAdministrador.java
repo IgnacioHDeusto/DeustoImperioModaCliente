@@ -18,13 +18,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class ventanaAdministrador extends JFrame{
+public class VentanaAdministrador extends JFrame{
     protected JButton gestionarProductos;
     protected JButton gestionarCuentas;
+    JButton gestionarEnvios;
+    
     protected JButton backButton;
-    public static ventanaProductos vprod;
+    public static VentanaProductos vprod;
 
-    public ventanaAdministrador() {
+    public VentanaAdministrador() {
 
         setTitle("VENTANA ADMIN");
         setSize(900, 450);
@@ -42,6 +44,7 @@ public class ventanaAdministrador extends JFrame{
 
         gestionarProductos = new JButton("GESTIONAR PRODUCTOS");
         gestionarCuentas = new JButton("GESTIONAR CUENTAS");
+        gestionarEnvios = new JButton("GESTIONAR ENVÍOS");
         backButton = new JButton("Atrás");
 
         Color buttonColor = new Color(140, 170, 255);
@@ -49,12 +52,14 @@ public class ventanaAdministrador extends JFrame{
         gestionarProductos.setBorder(new LineBorder(Color.BLACK));
         gestionarCuentas.setBackground(buttonColor);
         gestionarCuentas.setBorder(new LineBorder(Color.BLACK));
+        gestionarEnvios.setBackground(buttonColor);
+        gestionarEnvios.setBorder(new LineBorder(Color.BLACK));
          
 
         gestionarProductos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VentanaPrincipal.vprod = new ventanaProductos();
+                VentanaPrincipal.vprod = new VentanaProductos();
                 VentanaPrincipal.va.setVisible(false);
                 VentanaPrincipal.vprod.getProductos();
                 VentanaPrincipal.vprod.setVisible(true);
@@ -78,10 +83,21 @@ public class ventanaAdministrador extends JFrame{
             }
         });
 
+        gestionarEnvios.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VentanaPrincipal.ve = new VentanaEnvio();
+                //VentanaPrincipal.vgc.getPedidos();
+                VentanaPrincipal.va.setVisible(false);
+                VentanaPrincipal.ve.setVisible(true);
+            }
+        });
+
         getContentPane().setLayout(new BorderLayout());
 
         panelBotones.add(gestionarProductos);
         panelBotones.add(gestionarCuentas);
+        panelBotones.add(gestionarEnvios);
 
         add(panelBotones, BorderLayout.CENTER);
         add(backButton, BorderLayout.SOUTH);

@@ -31,16 +31,18 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import psc5.deustoimperiomodacliente.gui.VentanaGestionCuentas;
-import psc5.deustoimperiomodacliente.gui.ventanaAdministrador;
-import psc5.deustoimperiomodacliente.gui.ventanaProductos;
+import psc5.deustoimperiomodacliente.gui.VentanaAdministrador;
+import psc5.deustoimperiomodacliente.gui.VentanaProductos;
+import psc5.deustoimperiomodacliente.gui.VentanaEnvio;
 
 
 public class VentanaPrincipal extends JFrame{
     
     public static VentanaPrincipal vp;
-    public static ventanaAdministrador va; 
+    public static VentanaAdministrador va; 
     public static VentanaGestionCuentas vgc; 
-    public static ventanaProductos vprod;
+    public static VentanaProductos vprod;
+    public static VentanaEnvio ve;
 
     public static boolean admin = false;
 
@@ -81,7 +83,7 @@ public class VentanaPrincipal extends JFrame{
         iniciarsesion.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e){
-                vprod = new ventanaProductos(); 
+                vprod = new VentanaProductos(); 
 
                 final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/usuario/iniciarSesion?dni=" + correo.getText() +"&contr=" + contrasena.getText())).build();
                 try {
@@ -90,7 +92,7 @@ public class VentanaPrincipal extends JFrame{
                     if (inicio.equals("Administrador")){
                         vp.setVisible(false);
                         admin = true;
-                        va = new ventanaAdministrador();
+                        va = new VentanaAdministrador();
                         va.setVisible(true);
                     } else if (inicio.equals("Cliente") ){
                         vp.setVisible(false);
