@@ -1,0 +1,12 @@
+Articulo 1
+Nombre: Nike
+Cantidad: 1
+Precio: 120.0
+-------------------------
+Articulo 2
+Nombre: Air Force
+Cantidad: 1
+Precio: 200.0
+-------------------------
+Total: 320.0
+Fecha y hora: 2024-05-01 14:48:12
