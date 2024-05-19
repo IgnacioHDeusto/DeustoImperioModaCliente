@@ -2,7 +2,10 @@ package psc5.deustoimperiomodacliente.gui;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,7 +99,7 @@ public class VentanaProductos extends JFrame {
         Color newBackgroundColor = Color.DARK_GRAY; // Nuevo color de fondo
         Border border = BorderFactory.createLineBorder(Color.BLACK, 2); // Nuevo borde
 
-// Aplica los nuevos estilos a cada JLabel
+        // Aplica los nuevos estilos a cada JLabel
         verTodo.setFont(newFont);
         verTodo.setForeground(newForegroundColor);
         verTodo.setBackground(newBackgroundColor);
@@ -146,6 +149,23 @@ public class VentanaProductos extends JFrame {
         labelRopaInterior.setBorder(border);
         labelRopaInterior.setHorizontalAlignment(SwingConstants.CENTER);
         labelRopaInterior.setOpaque(true);
+
+        // Inicializar JSlider con un rango de precios
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 500, 0);
+
+
+        slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
+                if (!source.getValueIsAdjusting()) {
+                    int precio = (int)source.getValue();
+
+                    filtrarProductosPorPrecio(precio);
+                }
+            }
+        });
+
+        panelCategoria.add(slider);
 
         labelCalzado.addMouseListener(new MouseAdapter() {
             @Override
@@ -489,5 +509,26 @@ public class VentanaProductos extends JFrame {
                 return null;
             }
         }
+
+    
+    }
+
+    public void filtrarProductosPorPrecio(int precio) {
+    // Obtener el modelo de la tabla
+    DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+
+    // Crear un nuevo RowFilter que filtre las filas basándose en el precio
+    RowFilter<DefaultTableModel, Object> filter = new RowFilter<DefaultTableModel, Object>() {
+        public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+            // Asume que el precio está en la columna 2
+            int precioProducto = (Integer) entry.getValue(2);
+            return precioProducto <= precio;
+        }
+    };
+
+    // Aplicar el filtro al RowSorter de la tabla
+    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+    sorter.setRowFilter(filter);
+    tablaProductos.setRowSorter(sorter);
 }
 }
