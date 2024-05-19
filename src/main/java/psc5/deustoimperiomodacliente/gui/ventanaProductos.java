@@ -29,7 +29,7 @@ public class VentanaProductos extends JFrame {
     private JTable tablaProductos;
     private List<Articulo> todosLosArticulos = new ArrayList<>();
     private JButton botonAgregar, botonEliminar, botonEditar, backButton, añadirCarrito;
-    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior, verTodo;
+    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior, verTodo, labelFiltroDineroMax, labelFiltroTalla, labelFiltroDineroMin;
     private JButton carrito;
     private List<Articulo> productosCarrito = new ArrayList<>();
 
@@ -75,9 +75,83 @@ public class VentanaProductos extends JFrame {
         labelRopaInterior = new JLabel("Ropa Interior");
         verTodo = new JLabel("Ver Todo");
 
+        labelFiltroDineroMax = new JLabel("Filtrar por precio máximo");
+        labelFiltroDineroMin = new JLabel("Filtrar por precio minimo");
+        labelFiltroTalla = new JLabel("Filtrar por talla");
+
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
         JPanel panelCategoria = new JPanel();
+        JPanel panelFiltros = new JPanel();
+        JPanel panelFiltros1 = new JPanel();
+        JPanel panelFiltros2 = new JPanel();
+        JPanel panelFiltros3 = new JPanel();
+        JPanel panelNorte = new JPanel();
+        panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.Y_AXIS));
+
+        // Inicializar JSlider con un rango de precios
+        JSlider sliderMax = new JSlider(JSlider.HORIZONTAL, 0, 400, 0);
+
+        JSlider sliderMin = new JSlider(JSlider.HORIZONTAL, 0, 400, 0);
+
+        JLabel labelPrecioMax = new JLabel();
+
+        sliderMax.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
+                if (!source.getValueIsAdjusting()) {
+                    Integer precioObj = (Integer) source.getValue();
+                    if (precioObj != null) {
+                        int precio = precioObj.intValue();
+                
+                        labelPrecioMax.setText(precio + "€");
+                
+                        int precioMin = sliderMin.getValue();
+                        int precioMax = sliderMax.getValue();
+                        filtrarProductosPorPrecio(precioMin, precioMax);
+                    }
+                }
+            }
+        });
+
+        JLabel labelPrecioMin = new JLabel();
+
+        sliderMin.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
+                if (!source.getValueIsAdjusting()) {
+                    Integer precioObj = (Integer) source.getValue();
+                    if (precioObj != null) {
+                        int precio = precioObj.intValue();
+                
+                        labelPrecioMin.setText(precio + "€");
+                
+                        int precioMin = sliderMin.getValue();
+                        int precioMax = sliderMax.getValue();
+                        filtrarProductosPorPrecio(precioMin, precioMax);
+                    }
+                }
+            }
+        });
+
+        panelFiltros.setLayout(new BoxLayout(panelFiltros, BoxLayout.Y_AXIS));
+
+        panelFiltros.add(panelFiltros1);
+        panelFiltros.add(panelFiltros2);
+        panelFiltros.add(panelFiltros3);
+
+        panelFiltros1.add(labelFiltroDineroMax);
+        panelFiltros1.add(sliderMax);
+        panelFiltros1.add(labelPrecioMax);
+
+        panelFiltros2.add(labelFiltroDineroMin);
+        panelFiltros2.add(sliderMin);
+        panelFiltros2.add(labelPrecioMin);
+        
+        panelFiltros3.add(labelFiltroTalla);
+
+        panelNorte.add(panelCategoria);
+        panelNorte.add(panelFiltros);
 
         panelBotones.add(backButton);
         panelCategoria.add(labelCalzado);
@@ -89,15 +163,14 @@ public class VentanaProductos extends JFrame {
         panelCategoria.add(verTodo);
         panelCategoria.add(carrito, BorderLayout.EAST);
 
-        Font font = new Font("Arial", Font.BOLD, 12); // Definir una fuente
-        Color foregroundColor = Color.WHITE; // Color del texto
-        Color backgroundColor = new Color(66, 134, 244); // Color de fondo
-
         // Establecer estilos para cada JLabel
         Font newFont = new Font("Arial", Font.BOLD, 12); // Nueva fuente más pequeña
         Color newForegroundColor = Color.WHITE; // Nuevo color de primer plano
         Color newBackgroundColor = Color.DARK_GRAY; // Nuevo color de fondo
         Border border = BorderFactory.createLineBorder(Color.BLACK, 2); // Nuevo borde
+
+
+        
 
         // Aplica los nuevos estilos a cada JLabel
         verTodo.setFont(newFont);
@@ -150,22 +223,6 @@ public class VentanaProductos extends JFrame {
         labelRopaInterior.setHorizontalAlignment(SwingConstants.CENTER);
         labelRopaInterior.setOpaque(true);
 
-        // Inicializar JSlider con un rango de precios
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 500, 0);
-
-
-        slider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                JSlider source = (JSlider)e.getSource();
-                if (!source.getValueIsAdjusting()) {
-                    int precio = (int)source.getValue();
-
-                    filtrarProductosPorPrecio(precio);
-                }
-            }
-        });
-
-        panelCategoria.add(slider);
 
         labelCalzado.addMouseListener(new MouseAdapter() {
             @Override
@@ -458,7 +515,7 @@ public class VentanaProductos extends JFrame {
         //getContentPane().add(panelInfo, BorderLayout.NORTH);
         getContentPane().add(new JScrollPane(tablaProductos), BorderLayout.CENTER);
         getContentPane().add(panelBotones, BorderLayout.SOUTH);
-        getContentPane().add(panelCategoria, BorderLayout.NORTH);
+        getContentPane().add(panelNorte, BorderLayout.NORTH);
 
     }
 
@@ -513,22 +570,49 @@ public class VentanaProductos extends JFrame {
     
     }
 
-    public void filtrarProductosPorPrecio(int precio) {
-    // Obtener el modelo de la tabla
-    DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+    public void filtrarProductosPorPrecioMax(int precio) {
+        // Obtener el modelo de la tabla
+        DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
 
-    // Crear un nuevo RowFilter que filtre las filas basándose en el precio
-    RowFilter<DefaultTableModel, Object> filter = new RowFilter<DefaultTableModel, Object>() {
-        public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
-            // Asume que el precio está en la columna 2
-            int precioProducto = (Integer) entry.getValue(2);
-            return precioProducto <= precio;
-        }
-    };
+        // Crear un nuevo RowFilter que filtre las filas basándose en el precio
+        RowFilter<DefaultTableModel, Object> filter = new RowFilter<DefaultTableModel, Object>() {
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                Double precioProductoDouble = (Double) entry.getValue(3);
+                if (precioProductoDouble != null) {
+                    int precioProducto = precioProductoDouble.intValue();
+                    return precioProducto <= precio;
+                } else {
+                    return false;
+                }
+            }
+        };
 
-    // Aplicar el filtro al RowSorter de la tabla
-    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-    sorter.setRowFilter(filter);
-    tablaProductos.setRowSorter(sorter);
-}
+        // Aplicar el filtro al RowSorter de la tabla
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        sorter.setRowFilter(filter);
+        tablaProductos.setRowSorter(sorter);
+    }
+
+    public void filtrarProductosPorPrecio(int precioMin, int precioMax) {
+        // Obtener el modelo de la tabla
+        DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+    
+        // Crear un nuevo RowFilter que filtre las filas basándose en el precio
+        RowFilter<DefaultTableModel, Object> filter = new RowFilter<DefaultTableModel, Object>() {
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                Double precioProductoDouble = (Double) entry.getValue(3);
+                if (precioProductoDouble != null) {
+                    int precioProducto = precioProductoDouble.intValue();
+                    return precioProducto >= precioMin && precioProducto <= precioMax;
+                } else {
+                    return false;
+                }
+            }
+        };
+    
+        // Aplicar el filtro al RowSorter de la tabla
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        sorter.setRowFilter(filter);
+        tablaProductos.setRowSorter(sorter);
+    }
 }
