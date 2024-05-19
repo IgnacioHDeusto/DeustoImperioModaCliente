@@ -134,6 +134,21 @@ public class VentanaProductos extends JFrame {
             }
         });
 
+        // Crear JComboBox para filtrar por talla
+        String[] tallas = { "-", "XS", "S", "M", "L", "XL" };
+        JComboBox<String> comboBoxTallas = new JComboBox<>(tallas);
+
+        comboBoxTallas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Paso 2: Obtener el valor seleccionado del JComboBox
+                String tallaSeleccionada = (String) comboBoxTallas.getSelectedItem();
+        
+                filtrarProductosPorTalla(tallaSeleccionada);
+            }
+        });
+
+
         panelFiltros.setLayout(new BoxLayout(panelFiltros, BoxLayout.Y_AXIS));
 
         panelFiltros.add(panelFiltros1);
@@ -149,6 +164,7 @@ public class VentanaProductos extends JFrame {
         panelFiltros2.add(labelPrecioMin);
         
         panelFiltros3.add(labelFiltroTalla);
+        panelFiltros3.add(comboBoxTallas);
 
         panelNorte.add(panelCategoria);
         panelNorte.add(panelFiltros);
@@ -613,6 +629,25 @@ public class VentanaProductos extends JFrame {
         // Aplicar el filtro al RowSorter de la tabla
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         sorter.setRowFilter(filter);
+        tablaProductos.setRowSorter(sorter);
+    }
+
+    public void filtrarProductosPorTalla(String tallaSeleccionada) {
+        DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+    
+        RowFilter<DefaultTableModel, Object> rowFilter = null;
+        if (!tallaSeleccionada.equals("-")) {
+            int indiceColumnaTalla = 4;
+            rowFilter = new RowFilter<DefaultTableModel, Object>() {
+                public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                    String cellValue = entry.getStringValue(indiceColumnaTalla);
+                    return cellValue.equals(tallaSeleccionada);
+                }
+            };
+        }
+    
+        sorter.setRowFilter(rowFilter);
         tablaProductos.setRowSorter(sorter);
     }
 }
