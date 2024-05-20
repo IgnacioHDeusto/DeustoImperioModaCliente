@@ -76,6 +76,9 @@ public class VentanaCarrito extends JFrame{
             modeloTabla.addRow(fila);
         }
 
+    //Boton eliminar producto del carrito
+
+
     eliminarButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -85,7 +88,8 @@ public class VentanaCarrito extends JFrame{
             // Si hay una fila seleccionada, eliminarla
             if (selectedRow != -1) {
                 modeloTabla.removeRow(selectedRow);
-            }   
+                productosCarrito.remove(selectedRow);
+            }
         }
     });
 
