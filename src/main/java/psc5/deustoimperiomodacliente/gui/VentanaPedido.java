@@ -38,7 +38,7 @@ public class VentanaPedido extends JFrame {
         this.setLayout(new BorderLayout());
 
         // Nombres de las columnas
-        String[] columnNames = {"Envío", "Estado"};
+        String[] columnNames = {"Envío", "Estado", "DNI"};
 
         // Crear el modelo de la tabla
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
@@ -65,6 +65,8 @@ public class VentanaPedido extends JFrame {
                         c.setBackground(new Color(110, 176, 246));
                     } else if ("Recibido".equals(estado)) {
                         c.setBackground(new Color(107, 249, 88));
+                    } else if ("Devuelto".equals(estado)){
+                        c.setBackground(new Color(255,0,0));
                     } else {
                         c.setBackground(getBackground());
                     }
@@ -128,6 +130,8 @@ public class VentanaPedido extends JFrame {
                     JButton btnConfirmar = new JButton("Confirmar devolución");
                     btnConfirmar.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
+                            tablaEnvios.getModel().setValueAt("Devuelto", selectedRow, 1);
+                            updateEstado(tablaEnvios.getModel().getValueAt(selectedRow, 2).toString(), "Devuelto",Integer.parseInt(tablaEnvios.getModel().getValueAt(selectedRow, 0).toString()));
                             // Lógica para procesar la devolución
                             if (opcion1.isSelected()) {
                                 System.out.println("Devolución seleccionada: No es de mi talla");
@@ -183,7 +187,7 @@ public class VentanaPedido extends JFrame {
                     .collect(Collectors.toList());
 
             enviosDelUsuario.stream().forEach(envio -> {
-                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[]{envio.getUsuario().getCorreo(), envio.getEstado().toString()});
+                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[]{envio.getId(), envio.getEstado().toString(), envio.getUsuario().getDni()});
             });
             this.tablaEnvios.setModel((DefaultTableModel) tablaEnvios.getModel());
 
@@ -202,6 +206,20 @@ public class VentanaPedido extends JFrame {
             {
                 return null;
             }
+        }
+    }
+
+    
+    public void updateEstado(String dni, String estado, int idPedido) {
+        final HttpRequest request = HttpRequest.newBuilder()
+            .GET()
+            .uri(URI.create("http://127.0.0.1:8080/pedido/update?dni=" + dni + "&estado=" + estado + "&id=" + idPedido))
+            .build();
+        try {
+            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // Puedes procesar la respuesta aquí...
+        } catch (IOException | InterruptedException e1) {
+            e1.printStackTrace();
         }
     }
 }

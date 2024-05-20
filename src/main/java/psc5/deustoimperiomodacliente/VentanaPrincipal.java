@@ -83,7 +83,6 @@ public class VentanaPrincipal extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e){
                 dniUsuario = correo.getText();
-                System.out.println(dniUsuario);
                 vprod = new VentanaProductos(); 
 
                 final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/usuario/iniciarSesion?dni=" + correo.getText() +"&contr=" + contrasena.getText())).build();

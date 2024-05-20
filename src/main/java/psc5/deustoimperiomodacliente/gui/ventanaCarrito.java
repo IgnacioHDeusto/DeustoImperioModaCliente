@@ -1,5 +1,6 @@
 package psc5.deustoimperiomodacliente.gui;
 
+import psc5.deustoimperiomodacliente.VentanaPrincipal;
 import psc5.deustoimperiomodacliente.post.Articulo;
 
 import javax.swing.BoxLayout;
@@ -25,12 +26,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class VentanaCarrito extends JFrame{
-    
+     private VentanaPrincipal vp;
+    private HttpClient client = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_2).build();
     private List<Articulo> productosCarrito;
     private JTable tablaCarrito;
     private JButton pagarButton = new JButton("Finalizar y Pagar");
@@ -85,6 +92,7 @@ public class VentanaCarrito extends JFrame{
     pagarButton.addActionListener(new ActionListener() {
     @Override
         public void actionPerformed(ActionEvent e) {
+            crearPedido();
             JDialog dialog = new JDialog();
             dialog.setModal(true);
             dialog.setSize(300, 225);
@@ -186,6 +194,19 @@ public class VentanaCarrito extends JFrame{
             e.printStackTrace();
         }
     }
+
+    public void crearPedido() {
+        String dni = VentanaPrincipal.vp.getDniUsuario();
+        final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/pedido/crear?dni=" + dni)).build();
+        try {
+            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // Puedes procesar la respuesta aquí...
+        } catch (IOException | InterruptedException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    
 
     public static boolean isNumeric(String str) {
         try {
