@@ -1,16 +1,9 @@
 package psc5.deustoimperiomodacliente.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.net.http.HttpClient;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -34,8 +27,6 @@ import java.util.stream.Collectors;
 import psc5.deustoimperiomodacliente.VentanaPrincipal;
 import psc5.deustoimperiomodacliente.post.Articulo;
 import psc5.deustoimperiomodacliente.post.Pedido;
-
-import javax.swing.JScrollPane;
 
 public class VentanaPedido extends JFrame {
     private VentanaPrincipal vp;
@@ -84,7 +75,10 @@ public class VentanaPedido extends JFrame {
         };
 
         // Llamar a getEnvios() para cargar los envíos en la tabla
-        getEnvio("2");
+        String dni = VentanaPrincipal.vp.getDniUsuario();
+        
+        getEnvio(dni);
+        
 
         JButton btnAtras = new JButton("ATRAS");
         btnAtras.addActionListener(new ActionListener() {
