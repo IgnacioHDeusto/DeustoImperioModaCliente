@@ -29,6 +29,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import psc5.deustoimperiomodacliente.VentanaPrincipal;
 import psc5.deustoimperiomodacliente.post.Articulo;
@@ -36,12 +37,13 @@ import psc5.deustoimperiomodacliente.post.Pedido;
 
 import javax.swing.JScrollPane;
 
-public class VentanaEnvio extends JFrame{
+public class VentanaPedido extends JFrame{
+    private VentanaPrincipal vp;
     private HttpClient client = HttpClient.newBuilder()
     .version(HttpClient.Version.HTTP_2).build();
     private JTable tablaEnvios;
 
-    public VentanaEnvio() {
+    public VentanaPedido() {
         this.setLayout(new BorderLayout());
     
         // Nombres de las columnas
@@ -82,7 +84,7 @@ public class VentanaEnvio extends JFrame{
         };
     
         // Llamar a getEnvios() para cargar los envíos en la tabla
-        getEnvios();
+        getEnvio(vp.getDniUsuario());
     
         JButton btnAtras = new JButton("ATRAS");
         btnAtras.addActionListener(new ActionListener() {
@@ -101,23 +103,29 @@ public class VentanaEnvio extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void getEnvios() {
-        final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/pedido/all")).build();
-    
-        try {
-            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<Pedido> envios = convertirObjeto(response.body(), new TypeReference<List<Pedido>>() { });
-            DefaultTableModel model = (DefaultTableModel) tablaEnvios.getModel();
-            model.setRowCount(0);
-            envios.stream().forEach(envio -> {
-                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getUsuario().getCorreo(), envio.getEstado().toString(), envio.getUsuario().getNombre()});
-            });
-            this.tablaEnvios.setModel((DefaultTableModel) tablaEnvios.getModel());
+    public void getEnvio(String dniUsuario) {
+    final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/pedido/all")).build();
+    System.out.println(dniUsuario);
+    try {
+        final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        List<Pedido> envios = convertirObjeto(response.body(), new TypeReference<List<Pedido>>() { });
+        DefaultTableModel model = (DefaultTableModel) tablaEnvios.getModel();
+        model.setRowCount(0);
+        // Filtrar los pedidos por el DNI del usuario
+        List<Pedido> enviosDelUsuario = envios.stream()
+            .filter(envio -> envio.getUsuario().getDni().equals(dniUsuario))
+            .collect(Collectors.toList());
             
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        enviosDelUsuario.stream().forEach(envio -> {
+            ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getUsuario().getCorreo(), envio.getEstado().toString()});
+        });
+        this.tablaEnvios.setModel((DefaultTableModel) tablaEnvios.getModel());
+
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
     }
+}
 
     final ObjectMapper mapper = new ObjectMapper();
     public <T> T convertirObjeto(final String json, final TypeReference<T> reference) {
@@ -129,6 +137,5 @@ public class VentanaEnvio extends JFrame{
                 return null;
             }
         }
-    }
 }
-
+}

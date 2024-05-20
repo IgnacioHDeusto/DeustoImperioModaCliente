@@ -29,13 +29,14 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import psc5.deustoimperiomodacliente.gui.VentanaGestionCuentas;
+import psc5.deustoimperiomodacliente.gui.VentanaPedido;
 import psc5.deustoimperiomodacliente.gui.VentanaAdministrador;
 import psc5.deustoimperiomodacliente.gui.VentanaProductos;
 import psc5.deustoimperiomodacliente.gui.VentanaEnvio;
 
 
 public class VentanaPrincipal extends JFrame{
-    
+    protected String dniUsuario;
     public static VentanaPrincipal vp;
     public static VentanaAdministrador va; 
     public static VentanaGestionCuentas vgc; 
@@ -81,6 +82,8 @@ public class VentanaPrincipal extends JFrame{
         iniciarsesion.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e){
+                dniUsuario = correo.getText();
+                System.out.println(dniUsuario);
                 vprod = new VentanaProductos(); 
 
                 final HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("http://127.0.0.1:8080/usuario/iniciarSesion?dni=" + correo.getText() +"&contr=" + contrasena.getText())).build();
@@ -108,6 +111,7 @@ public class VentanaPrincipal extends JFrame{
 
         });
 
+        
         registrar = new JButton("Registrar");
         registrar.setFont(new Font("Arial", Font.BOLD, 14));
         registrar.setBackground(new Color(140, 170, 255));
@@ -177,6 +181,10 @@ public class VentanaPrincipal extends JFrame{
         this.setSize(400, 300);
         setLocationRelativeTo(null);
 
+    }
+
+    public String getDniUsuario() {
+        return dniUsuario;
     }
 
     public static void main(String[] args) {
