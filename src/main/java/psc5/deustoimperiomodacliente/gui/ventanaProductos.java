@@ -17,7 +17,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import psc5.deustoimperiomodacliente.VentanaPrincipal;
 import psc5.deustoimperiomodacliente.post.Articulo;
@@ -29,7 +31,7 @@ public class VentanaProductos extends JFrame {
     private JTable tablaProductos;
     private List<Articulo> todosLosArticulos = new ArrayList<>();
     private JButton botonAgregar, botonEliminar, botonEditar, backButton, añadirCarrito;
-    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior, verTodo, labelFiltroDineroMax, labelFiltroTalla, labelFiltroDineroMin;
+    private JLabel labelCalzado, labelRopaDeportiva, labelCalzadoDeportivo, labelRopa, labelAccesorios, labelRopaInterior, verTodo, labelFiltroDineroMax, labelFiltroTalla, labelFiltroDineroMin, labelFiltroTallaCalzado;
     private JButton carrito;
     private List<Articulo> productosCarrito = new ArrayList<>();
 
@@ -77,7 +79,8 @@ public class VentanaProductos extends JFrame {
 
         labelFiltroDineroMax = new JLabel("Filtrar por precio máximo");
         labelFiltroDineroMin = new JLabel("Filtrar por precio minimo");
-        labelFiltroTalla = new JLabel("Filtrar por talla");
+        labelFiltroTalla = new JLabel("Filtrar por talla Ropa");
+        labelFiltroTallaCalzado = new JLabel("Filtrar por talla Calzado");
 
         // Agregar botones al panel
         JPanel panelBotones = new JPanel();
@@ -141,8 +144,30 @@ public class VentanaProductos extends JFrame {
         comboBoxTallas.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Paso 2: Obtener el valor seleccionado del JComboBox
                 String tallaSeleccionada = (String) comboBoxTallas.getSelectedItem();
+        
+                filtrarProductosPorTalla(tallaSeleccionada);
+            }
+        });
+
+        //Set<String> tallasSet = new HashSet<>();
+
+        //for (int i = 0; i < tablaProductos.getRowCount(); i++) {
+        //    String tallaCalzado = (String) tablaProductos.getValueAt(i, 4);
+        //    if (tallaCalzado.matches("\\d+")) {  
+        //        tallasSet.add(tallaCalzado);
+        //    }
+        //}
+
+        //String[] tallasCalzado = tallasSet.toArray(new String[0]);
+        // Crear JComboBox para filtrar por talla de calzado
+        String[] tallasCalzado2 = { "-", "37", "38", "39", "40", "41", "42", "43", "44"};
+        JComboBox<String> comboBoxTallasCalzado = new JComboBox<>(tallasCalzado2);
+
+        comboBoxTallasCalzado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tallaSeleccionada = (String) comboBoxTallasCalzado.getSelectedItem();
         
                 filtrarProductosPorTalla(tallaSeleccionada);
             }
@@ -165,6 +190,8 @@ public class VentanaProductos extends JFrame {
         
         panelFiltros3.add(labelFiltroTalla);
         panelFiltros3.add(comboBoxTallas);
+        panelFiltros3.add(labelFiltroTallaCalzado);
+        panelFiltros3.add(comboBoxTallasCalzado);
 
         panelNorte.add(panelCategoria);
         panelNorte.add(panelFiltros);
