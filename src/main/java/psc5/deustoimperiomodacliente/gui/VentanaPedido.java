@@ -212,7 +212,7 @@ public class VentanaPedido extends JFrame {
     
     public void updateEstado(String dni, String estado, int idPedido) {
         final HttpRequest request = HttpRequest.newBuilder()
-            .GET()
+            .PUT(HttpRequest.BodyPublishers.noBody())
             .uri(URI.create("http://127.0.0.1:8080/pedido/update?dni=" + dni + "&estado=" + estado + "&id=" + idPedido))
             .build();
         try {

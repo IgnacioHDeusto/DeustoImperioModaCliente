@@ -9,7 +9,8 @@ public class Pedido {
     public enum Estado {
         Preparacion,
         Estado,
-        Recibido
+        Recibido,
+        Devuelto
     }
 
     public int getId() {
