@@ -42,6 +42,7 @@ public class VentanaPrincipal extends JFrame{
     public static VentanaGestionCuentas vgc; 
     public static VentanaProductos vprod;
     public static VentanaEnvio ve;
+    public static VentanaPedido vpe;
 
     public static boolean admin = false;
 

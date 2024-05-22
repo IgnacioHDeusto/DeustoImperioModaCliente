@@ -85,8 +85,8 @@ public class VentanaPedido extends JFrame {
         JButton btnAtras = new JButton("ATRAS");
         btnAtras.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                VentanaPrincipal.ve.setVisible(false);
-                VentanaPrincipal.va.setVisible(true);
+                VentanaPedido.this.setVisible(false);
+                VentanaPrincipal.vprod.setVisible(true);
             }
         });
 
