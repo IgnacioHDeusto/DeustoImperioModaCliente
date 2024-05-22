@@ -8,7 +8,7 @@ public class Pedido {
 
     public enum Estado {
         Preparacion,
-        Estado,
+        Reparto,
         Recibido,
         Devuelto
     }
