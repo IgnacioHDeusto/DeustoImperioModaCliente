@@ -143,6 +143,7 @@ public class VentanaCarrito extends JFrame{
                     // Implementar la lógica para imprimir el ticket
                     imprimirTicket();
                     dialog.setVisible(false);
+                    VentanaCarrito.this.dispose();
                 }
             });
 
