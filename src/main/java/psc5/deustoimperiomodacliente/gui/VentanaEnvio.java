@@ -36,7 +36,7 @@ public class VentanaEnvio extends JFrame{
         this.setLayout(new BorderLayout());
     
         // Nombres de las columnas
-        String[] columnNames = {"Id", "Estado", "Envio"};
+        String[] columnNames = {"Id", "Estado", "Envio", "DNI"};
     
         // Crear el modelo de la tabla
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
@@ -74,6 +74,7 @@ public class VentanaEnvio extends JFrame{
             }
         };
     
+        
         // Llamar a getEnvios() para cargar los envíos en la tabla
         getEnvios();
     
@@ -122,7 +123,7 @@ public class VentanaEnvio extends JFrame{
             DefaultTableModel model = (DefaultTableModel) tablaEnvios.getModel();
             model.setRowCount(0);
             envios.stream().forEach(envio -> {
-                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getId(), envio.getEstado().toString(), envio.getUsuario().getCorreo()});
+                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getId(), envio.getEstado().toString(), envio.getUsuario().getCorreo(), envio.getUsuario().getDni()});
             });
             this.tablaEnvios.setModel((DefaultTableModel) tablaEnvios.getModel());
             
@@ -131,10 +132,10 @@ public class VentanaEnvio extends JFrame{
         }
     }
 
-        public void updateEstado(String estado, int idPedido) {
+    public void updateEstado(String dni, String estado, int idPedido) {
         final HttpRequest request = HttpRequest.newBuilder()
             .PUT(HttpRequest.BodyPublishers.noBody())
-            .uri(URI.create("http://127.0.0.1:8080/pedido/update?estado=" + estado + "&id=" + idPedido))
+            .uri(URI.create("http://127.0.0.1:8080/pedido/update?dni=" + dni + "&estado=" + estado + "&id=" + idPedido))
             .build();
         try {
             final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -169,7 +170,7 @@ public class VentanaEnvio extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String nuevoEstado = comboBox.getSelectedItem().toString();
                 tablaEnvios.setValueAt(nuevoEstado, selectedRow, 1);
-                updateEstado(nuevoEstado.toString() ,Integer.parseInt(tablaEnvios.getModel().getValueAt(selectedRow, 0).toString()));
+                updateEstado(tablaEnvios.getModel().getValueAt(selectedRow, 3).toString(), nuevoEstado,Integer.parseInt(tablaEnvios.getModel().getValueAt(selectedRow, 0).toString()));
                 // Aquí puedes añadir la lógica para actualizar el estado en el servidor
                 dialog.dispose();
             }
