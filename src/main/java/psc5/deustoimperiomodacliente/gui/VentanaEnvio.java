@@ -71,7 +71,7 @@ public class VentanaEnvio extends JFrame{
                     } else if ("Reparto".equals(estado)) {
                         c.setBackground(new Color(110, 176, 246));
                     } else if ("Recibido".equals(estado)) {
-                        c.setBackground(new Color(107, 249, 88 ));
+                        c.setBackground(new Color(107, 249, 88));
                     } else {
                         c.setBackground(getBackground());
                     }
@@ -92,7 +92,26 @@ public class VentanaEnvio extends JFrame{
             }
         });
     
-        this.add(btnAtras, BorderLayout.SOUTH);
+        JButton botonEstado = new JButton("Cambiar Estado");
+        botonEstado.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tablaEnvios.getSelectedRow();
+                if (selectedRow != -1) {
+                    String correoEnvio = tablaEnvios.getValueAt(selectedRow, 0).toString();
+                    String estadoActual = tablaEnvios.getValueAt(selectedRow, 1).toString();
+                    mostrarDialogoEstado(correoEnvio, estadoActual, selectedRow);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, seleccione un envío de la tabla.");
+                }
+            }
+        });
+    
+        JPanel panelBotones = new JPanel();
+        panelBotones.setLayout(new FlowLayout());
+        panelBotones.add(btnAtras);
+        panelBotones.add(botonEstado);
+    
+        this.add(panelBotones, BorderLayout.SOUTH);
         JScrollPane scrollPane = new JScrollPane(tablaEnvios);
         this.add(scrollPane, BorderLayout.CENTER);
     
@@ -110,7 +129,7 @@ public class VentanaEnvio extends JFrame{
             DefaultTableModel model = (DefaultTableModel) tablaEnvios.getModel();
             model.setRowCount(0);
             envios.stream().forEach(envio -> {
-                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getUsuario().getCorreo(), envio.getEstado().toString(), envio.getUsuario().getNombre()});
+                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getUsuario().getCorreo(), envio.getEstado().toString()});
             });
             this.tablaEnvios.setModel((DefaultTableModel) tablaEnvios.getModel());
             
@@ -130,5 +149,30 @@ public class VentanaEnvio extends JFrame{
             }
         }
     }
-}
 
+    private void mostrarDialogoEstado(String correoEnvio, String estadoActual, int selectedRow) {
+        JDialog dialog = new JDialog(this, "Cambiar Estado del Envío", true);
+        dialog.setLayout(new BorderLayout());
+    
+        String[] estados = {"Preparacion", "Reparto", "Recibido"};
+        JComboBox<String> comboBox = new JComboBox<>(estados);
+        comboBox.setSelectedItem(estadoActual);
+    
+        JButton btnAceptar = new JButton("Aceptar");
+        btnAceptar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nuevoEstado = comboBox.getSelectedItem().toString();
+                tablaEnvios.setValueAt(nuevoEstado, selectedRow, 1);
+                // Aquí puedes añadir la lógica para actualizar el estado en el servidor
+                dialog.dispose();
+            }
+        });
+    
+        dialog.add(comboBox, BorderLayout.CENTER);
+        dialog.add(btnAceptar, BorderLayout.SOUTH);
+    
+        dialog.setSize(300, 150);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+}
