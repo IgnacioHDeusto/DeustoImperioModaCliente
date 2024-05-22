@@ -1,16 +1,9 @@
 package psc5.deustoimperiomodacliente.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.net.http.HttpClient;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -34,8 +27,6 @@ import psc5.deustoimperiomodacliente.VentanaPrincipal;
 import psc5.deustoimperiomodacliente.post.Articulo;
 import psc5.deustoimperiomodacliente.post.Pedido;
 
-import javax.swing.JScrollPane;
-
 public class VentanaEnvio extends JFrame{
     private HttpClient client = HttpClient.newBuilder()
     .version(HttpClient.Version.HTTP_2).build();
@@ -45,7 +36,7 @@ public class VentanaEnvio extends JFrame{
         this.setLayout(new BorderLayout());
     
         // Nombres de las columnas
-        String[] columnNames = {"Envío", "Estado"};
+        String[] columnNames = {"Id", "Estado", "Envio"};
     
         // Crear el modelo de la tabla
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
@@ -59,12 +50,12 @@ public class VentanaEnvio extends JFrame{
         tablaEnvios = new JTable(model) {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-    
+
                 // Asegúrate de que el color solo se cambie para las filas no seleccionadas
                 if (!isRowSelected(row)) {
                     // Obtén el estado del envío para esta fila
                     String estado = getModel().getValueAt(row, 1).toString();
-    
+
                     // Cambia el color de fondo de la fila en función del estado
                     if ("Preparacion".equals(estado)) {
                         c.setBackground(new Color(255, 180, 79));
@@ -72,11 +63,13 @@ public class VentanaEnvio extends JFrame{
                         c.setBackground(new Color(110, 176, 246));
                     } else if ("Recibido".equals(estado)) {
                         c.setBackground(new Color(107, 249, 88));
+                    } else if ("Devuelto".equals(estado)){
+                        c.setBackground(new Color(255,0,0));
                     } else {
                         c.setBackground(getBackground());
                     }
                 }
-    
+
                 return c;
             }
         };
@@ -129,12 +122,25 @@ public class VentanaEnvio extends JFrame{
             DefaultTableModel model = (DefaultTableModel) tablaEnvios.getModel();
             model.setRowCount(0);
             envios.stream().forEach(envio -> {
-                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getUsuario().getCorreo(), envio.getEstado().toString()});
+                ((DefaultTableModel) tablaEnvios.getModel()).addRow(new Object[] {envio.getId(), envio.getEstado().toString(), envio.getUsuario().getCorreo()});
             });
             this.tablaEnvios.setModel((DefaultTableModel) tablaEnvios.getModel());
             
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+        public void updateEstado(String estado, int idPedido) {
+        final HttpRequest request = HttpRequest.newBuilder()
+            .PUT(HttpRequest.BodyPublishers.noBody())
+            .uri(URI.create("http://127.0.0.1:8080/pedido/update?estado=" + estado + "&id=" + idPedido))
+            .build();
+        try {
+            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // Puedes procesar la respuesta aquí...
+        } catch (IOException | InterruptedException e1) {
+            e1.printStackTrace();
         }
     }
 
@@ -163,6 +169,7 @@ public class VentanaEnvio extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String nuevoEstado = comboBox.getSelectedItem().toString();
                 tablaEnvios.setValueAt(nuevoEstado, selectedRow, 1);
+                updateEstado(nuevoEstado.toString() ,Integer.parseInt(tablaEnvios.getModel().getValueAt(selectedRow, 0).toString()));
                 // Aquí puedes añadir la lógica para actualizar el estado en el servidor
                 dialog.dispose();
             }
